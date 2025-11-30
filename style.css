@@ -14,7 +14,7 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 20px;
     min-height: 100vh;
@@ -35,7 +35,7 @@ body {
     transition: opacity 0.5s ease, transform 0.5s ease;
     position: absolute;
     width: calc(100% - 40px);
-    max-width: 800px;
+    max-width: 900px;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -58,6 +58,18 @@ h2 {
     font-size: 1.8rem;
     margin-bottom: 20px;
     color: #555;
+}
+
+h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+h4 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #666;
 }
 
 p {
@@ -86,21 +98,73 @@ p {
     transform: translateY(1px);
 }
 
-.scene-text {
-    font-size: 1.4rem;
-    margin-bottom: 30px;
-    min-height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.5s ease;
+.btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
 }
 
-.interpretation {
-    margin-top: 30px;
+/* Scene Header */
+.scene-header {
+    margin-bottom: 25px;
+}
+
+.scratch-instruction {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 8px;
+    font-style: italic;
+}
+
+/* Scratch Container */
+.scratch-container {
+    position: relative;
+    margin: 30px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.image-stack {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Lösungsbild - unten (immer sichtbar) */
+.solution-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Rubbel-Canvas - oben (mit Ausgangsbild) */
+.scratch-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+    border-radius: 12px;
+}
+
+.scratch-canvas:active {
+    cursor: grabbing;
+}
+
+/* Text-Lösung separat */
+.solution-text {
+    width: 100%;
+    max-width: 700px;
     padding: 20px;
     background-color: #f0f0f0;
-    border-radius: 4px;
+    border-radius: 8px;
     opacity: 0;
     transform: translateY(10px);
     transition: opacity 0.5s ease, transform 0.5s ease;
@@ -108,15 +172,45 @@ p {
     overflow: hidden;
 }
 
-.interpretation.revealed {
+.solution-text.visible {
     opacity: 1;
     transform: translateY(0);
     max-height: 200px;
 }
 
-.interpretation h3 {
-    margin-bottom: 10px;
+.solution-text h4 {
+    color: #4a6fa5;
+    margin-bottom: 8px;
+}
+
+.solution-text p {
+    margin-bottom: 0;
     color: #555;
+}
+
+.input-section {
+    margin: 30px 0;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+textarea {
+    width: 100%;
+    height: 120px;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+    font-family: inherit;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #4a6fa5;
 }
 
 .progress {
@@ -148,13 +242,36 @@ p {
     color: #555;
 }
 
-.reflection ul {
-    margin-left: 20px;
-    margin-bottom: 20px;
+.answers-container {
+    margin: 20px 0;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #fafafa;
 }
 
-.reflection li {
-    margin-bottom: 10px;
+.answer-item {
+    background-color: white;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.answer-scene {
+    font-weight: bold;
+    color: #4a6fa5;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.answer-text {
+    color: #555;
+    font-style: italic;
+    line-height: 1.5;
 }
 
 .stats {
@@ -176,4 +293,64 @@ p {
 .stat-label {
     font-size: 0.9rem;
     color: #666;
+}
+
+/* Animation für neue Antworten */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .screen {
+        padding: 20px;
+        width: calc(100% - 20px);
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .image-stack {
+        max-width: 100%;
+    }
+    
+    .solution-image {
+        height: 300px;
+    }
+    
+    .solution-text {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .solution-image {
+        height: 250px;
+    }
+    
+    .solution-text {
+        padding: 12px;
+    }
+    
+    .solution-text h4 {
+        font-size: 1rem;
+    }
+    
+    .solution-text p {
+        font-size: 0.9rem;
+    }
 }

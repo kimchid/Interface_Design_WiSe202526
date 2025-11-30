@@ -18,7 +18,7 @@
         <!-- Introduction Screen -->
         <div id="intro-screen" class="screen">
             <h2>Einführung</h2>
-            <p>Lies die folgenden kurzen Szenen und interpretiere, was du glaubst, was passiert.</p>
+            <p>Rubble das Bild frei, um die wahre Geschichte dahinter zu enthüllen.</p>
             <p>Deine Interpretation wird von deinen eigenen Erfahrungen, Emotionen und Annahmen beeinflusst.</p>
             <button class="btn" id="intro-btn">Weiter</button>
         </div>
@@ -32,11 +32,31 @@
                 <div class="progress-dot"></div>
                 <div class="progress-dot"></div>
             </div>
-            <div class="scene-text">Was glaubst du passiert hier gerade?</div>
-            <button class="btn" id="reveal-1">Auflösung zeigen</button>
-            <div class="interpretation">
-                <h3>Was wirklich passiert:</h3>
-                <p>Der Mann ist krank und kauft sich deswegen Medizin.</p>
+            
+            <div class="scene-header">
+                <h3>Was glaubst du passiert hier gerade?</h3>
+                <div class="scratch-instruction">Rubble das Bild frei um die wahre Geschichte zu enthüllen</div>
+            </div>
+
+            <div class="scratch-container">
+                <div class="image-stack">
+                    <!-- Lösungsbild - unten -->
+                    <img src="images/solution_1.jpg" alt="Lösung Szene 1" class="solution-image">
+                    
+                    <!-- Ausgangsbild - oben mit Rubbelschicht -->
+                    <canvas id="scratch-1" class="scratch-canvas"></canvas>
+                </div>
+                
+                <!-- Text-Lösung separat -->
+                <div class="solution-text" id="solution-text-1">
+                    <h4>Was wirklich passiert:</h4>
+                    <p>Der Mann hat Schlafprobleme und kauft Schlaftabletten, um besser schlafen zu können. Er leidet unter Stress bei der Arbeit.</p>
+                </div>
+            </div>
+            
+            <div class="input-section">
+                <textarea id="input-1" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
+                <button class="btn" id="submit-1" disabled>Interpretation abschicken</button>
             </div>
         </div>
 
@@ -48,11 +68,31 @@
                 <div class="progress-dot"></div>
                 <div class="progress-dot"></div>
             </div>
-            <div class="scene-text">Was glaubst du passiert hier gerade?</div>
-            <button class="btn" id="reveal-2">Auflösung zeigen</button>
-            <div class="interpretation">
-                <h3>Was wirklich passiert:</h3>
-                <p>Der Mann hat Schlafprobleme.</p>
+            
+            <div class="scene-header">
+                <h3>Was glaubst du passiert hier gerade?</h3>
+                <div class="scratch-instruction">Rubble das Bild frei um die wahre Geschichte zu enthüllen</div>
+            </div>
+
+            <div class="scratch-container">
+                <div class="image-stack">
+                    <!-- Lösungsbild - unten -->
+                    <img src="solution_2.jpg" alt="Lösung Szene 2" class="solution-image">
+                    
+                    <!-- Ausgangsbild - oben mit Rubbelschicht -->
+                    <canvas id="scratch-2" class="scratch-canvas"></canvas>
+                </div>
+                
+                <!-- Text-Lösung separat -->
+                <div class="solution-text" id="solution-text-2">
+                    <h4>Was wirklich passiert:</h4>
+                    <p>Die Person leidet unter starkem Stress und sucht nach einer Lösung für ihre Schlafstörungen. Sie hat familiäre Probleme.</p>
+                </div>
+            </div>
+            
+            <div class="input-section">
+                <textarea id="input-2" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
+                <button class="btn" id="submit-2" disabled>Interpretation abschicken</button>
             </div>
         </div>
 
@@ -64,11 +104,31 @@
                 <div class="progress-dot"></div>
                 <div class="progress-dot"></div>
             </div>
-            <div class="scene-text">Was glaubst du passiert hier gerade?</div>
-            <button class="btn" id="reveal-3">Auflösung zeigen</button>
-            <div class="interpretation">
-                <h3>Was wirklich passiert:</h3>
-                <p>Der Mann ist depressiv und kauft deswegen Pillen.</p>
+            
+            <div class="scene-header">
+                <h3>Was glaubst du passiert hier gerade?</h3>
+                <div class="scratch-instruction">Rubble das Bild frei um die wahre Geschichte zu enthüllen</div>
+            </div>
+
+            <div class="scratch-container">
+                <div class="image-stack">
+                    <!-- Lösungsbild - unten -->
+                    <img src="solution_3.jpg" alt="Lösung Szene 3" class="solution-image">
+                    
+                    <!-- Ausgangsbild - oben mit Rubbelschicht -->
+                    <canvas id="scratch-3" class="scratch-canvas"></canvas>
+                </div>
+                
+                <!-- Text-Lösung separat -->
+                <div class="solution-text" id="solution-text-3">
+                    <h4>Was wirklich passiert:</h4>
+                    <p>Ein Schichtarbeiter bereitet sich auf seine Nachtschicht vor und benötigt Hilfe beim Schlafen am Tag. Er arbeitet im Krankenhaus.</p>
+                </div>
+            </div>
+            
+            <div class="input-section">
+                <textarea id="input-3" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
+                <button class="btn" id="submit-3" disabled>Interpretation abschicken</button>
             </div>
         </div>
 
@@ -80,11 +140,31 @@
                 <div class="progress-dot active"></div>
                 <div class="progress-dot"></div>
             </div>
-            <div class="scene-text">Was glaubst du passiert hier gerade?</div>
-            <button class="btn" id="reveal-4">Auflösung zeigen</button>
-            <div class="interpretation">
-                <h3>Was wirklich passiert:</h3>
-                <p>Er kauft Schmerzmittel.</p>
+            
+            <div class="scene-header">
+                <h3>Was glaubst du passiert hier gerade?</h3>
+                <div class="scratch-instruction">Rubble das Bild frei um die wahre Geschichte zu enthüllen</div>
+            </div>
+
+            <div class="scratch-container">
+                <div class="image-stack">
+                    <!-- Lösungsbild - unten -->
+                    <img src="solution_4.jpg" alt="Lösung Szene 4" class="solution-image">
+                    
+                    <!-- Ausgangsbild - oben mit Rubbelschicht -->
+                    <canvas id="scratch-4" class="scratch-canvas"></canvas>
+                </div>
+                
+                <!-- Text-Lösung separat -->
+                <div class="solution-text" id="solution-text-4">
+                    <h4>Was wirklich passiert:</h4>
+                    <p>Jemand mit Jetlag nach einer langen Reise versucht, seinen Schlafrhythmus wiederherzustellen. Er ist Geschäftsreisender.</p>
+                </div>
+            </div>
+            
+            <div class="input-section">
+                <textarea id="input-4" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
+                <button class="btn" id="submit-4" disabled>Interpretation abschicken</button>
             </div>
         </div>
 
@@ -96,11 +176,31 @@
                 <div class="progress-dot"></div>
                 <div class="progress-dot active"></div>
             </div>
-            <div class="scene-text">Finde heraus was wirklich passiert.</div>
-            <button class="btn" id="reveal-5">Auflösung zeigen</button>
-            <div class="interpretation">
-                <h3>Was wirklich passiert:</h3>
-                <p>Er ist im Supermarkt einkaufen.</p>
+            
+            <div class="scene-header">
+                <h3>Finde heraus was wirklich passiert</h3>
+                <div class="scratch-instruction">Rubble das Bild komplett frei</div>
+            </div>
+
+            <div class="scratch-container">
+                <div class="image-stack">
+                    <!-- Lösungsbild - unten -->
+                    <img src="solution_5.jpg" alt="Lösung Szene 5" class="solution-image">
+                    
+                    <!-- Ausgangsbild - oben mit Rubbelschicht -->
+                    <canvas id="scratch-5" class="scratch-canvas"></canvas>
+                </div>
+                
+                <!-- Text-Lösung separat -->
+                <div class="solution-text" id="solution-text-5">
+                    <h4>Was wirklich passiert:</h4>
+                    <p>Eine Person mit chronischen Schmerzen sucht nach Medikamenten, um schmerzfrei schlafen zu können. Sie hat Rückenprobleme.</p>
+                </div>
+            </div>
+            
+            <div class="input-section">
+                <textarea id="input-5" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
+                <button class="btn" id="submit-5" disabled>Interpretation abschicken</button>
             </div>
         </div>
 
@@ -108,6 +208,11 @@
         <div id="reflection-screen" class="screen">
             <h2>Reflexion</h2>
             <div class="reflection">
+                <h3>Deine gesammelten Interpretationen:</h3>
+                <div id="all-answers" class="answers-container">
+                    <!-- Hier werden alle gespeicherten Antworten angezeigt -->
+                </div>
+                
                 <h3>Wie oft hast du negativ / positiv interpretiert?</h3>
                 <p>Deine Interpretationen wurden nicht bewertet, aber vielleicht möchtest du darüber nachdenken, ob du eher zu negativen oder positiven Interpretationen neigst.</p>
                 
@@ -120,11 +225,11 @@
             
             <div class="stats">
                 <div class="stat-item">
-                    <div class="stat-value">5</div>
+                    <div class="stat-value" id="total-scenes">5</div>
                     <div class="stat-label">Szenen</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">5</div>
+                    <div class="stat-value" id="total-answers">0</div>
                     <div class="stat-label">Interpretationen</div>
                 </div>
                 <div class="stat-item">
