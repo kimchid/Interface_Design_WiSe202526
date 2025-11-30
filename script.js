@@ -20,12 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (targetScreen) {
             targetScreen.classList.add('active');
             
-            // Wenn es der Reflection-Screen ist, zeige alle gespeicherten Antworten an
-            if (screenId === 'reflection-screen') {
+            if (screenId === 'answers-screen') {
                 displayAllAnswers();
+            } else if (screenId === 'reflection-screen') {
+                updateReflectionStats();
             }
-        } else {
-            console.error('Screen nicht gefunden:', screenId);
         }
     }
 
@@ -39,59 +38,163 @@ document.addEventListener('DOMContentLoaded', function() {
     // Funktion zum Anzeigen aller gespeicherten Antworten
     function displayAllAnswers() {
         const container = document.getElementById('all-answers');
-        const totalAnswersElement = document.getElementById('total-answers');
+        const answersTotalElement = document.getElementById('answers-total');
+        const answersCompletedElement = document.getElementById('answers-completed');
         
         if (container) {
             container.innerHTML = '';
             
             let answerCount = 0;
+            let completedScenes = 0;
             
-            // Gehe durch alle Szenen und zeige gespeicherte Antworten an
+            for (let i = 1; i <= 5; i++) {
+                const sceneId = `scene-${i}`;
+                const answer = userAnswers[sceneId];
+                
+                const answerItem = document.createElement('div');
+                answerItem.className = 'answer-item fade-in';
+                
+                if (answer && answer.trim() !== '') {
+                    answerCount++;
+                    completedScenes++;
+                    
+                    answerItem.innerHTML = `
+                        <div class="answer-scene">Szene ${i}:</div>
+                        <div class="answer-text">"${answer}"</div>
+                    `;
+                } else {
+                    answerItem.innerHTML = `
+                        <div class="answer-scene">Szene ${i}:</div>
+                        <div class="answer-text" style="color: #999; font-style: italic;">Keine Interpretation gespeichert</div>
+                    `;
+                }
+                
+                container.appendChild(answerItem);
+            }
+            
+            if (answersTotalElement) {
+                answersTotalElement.textContent = answerCount;
+            }
+            
+            if (answersCompletedElement) {
+                answersCompletedElement.textContent = completedScenes;
+            }
+            
+            if (answerCount === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">Noch keine Interpretationen gespeichert.</p>';
+            }
+        }
+    }
+
+    // Funktion zum Aktualisieren der Statistiken auf der Reflexionsseite
+    function updateReflectionStats() {
+        const totalAnswersElement = document.getElementById('total-answers');
+        
+        if (totalAnswersElement) {
+            let answerCount = 0;
+            
             for (let i = 1; i <= 5; i++) {
                 const sceneId = `scene-${i}`;
                 const answer = userAnswers[sceneId];
                 
                 if (answer && answer.trim() !== '') {
                     answerCount++;
-                    
-                    const answerItem = document.createElement('div');
-                    answerItem.className = 'answer-item fade-in';
-                    answerItem.innerHTML = `
-                        <div class="answer-scene">Szene ${i}:</div>
-                        <div class="answer-text">"${answer}"</div>
-                    `;
-                    container.appendChild(answerItem);
                 }
             }
             
-            // Aktualisiere die Statistik
-            if (totalAnswersElement) {
-                totalAnswersElement.textContent = answerCount;
-            }
-            
-            // Wenn keine Antworten vorhanden sind
-            if (answerCount === 0) {
-                container.innerHTML = '<p>Noch keine Interpretationen gespeichert.</p>';
-            }
+            totalAnswersElement.textContent = answerCount;
         }
+    }
+
+    // Einfache Reset-Funktion für jede Szene
+    function resetScene(sceneNumber) {
+        console.log(`Resette Szene ${sceneNumber}`);
+        
+        // Textarea zurücksetzen
+        const textarea = document.getElementById(`input-${sceneNumber}`);
+        if (textarea) {
+            textarea.value = '';
+            textarea.disabled = false;
+        }
+        
+        // Submit-Button zurücksetzen
+        const submitBtn = document.getElementById(`submit-${sceneNumber}`);
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Interpretation abschicken';
+        }
+        
+        // Lösungstext verstecken
+        const solutionText = document.getElementById(`solution-text-${sceneNumber}`);
+        if (solutionText) {
+            solutionText.classList.remove("visible");
+        }
+        
+        // Lösungsbild verstecken
+        const solutionImage = document.querySelector(`#scene-${sceneNumber} .solution-image`);
+        if (solutionImage) {
+            solutionImage.classList.remove('revealed');
+            solutionImage.style.opacity = '0';
+        }
+        
+        // Canvas zurücksetzen
+        const canvas = document.getElementById(`scratch-${sceneNumber}`);
+        if (canvas) {
+            const ctx = canvas.getContext("2d");
+            const startImages = {
+                1: 'images/ausgangsbild_1.jpg',
+                2: 'images/ausgangsbild_2.jpg', 
+                3: 'images/ausgangsbild_3.jpg',
+                4: 'images/ausgangsbild_4.jpg',
+                5: 'images/ausgangsbild_5.jpg'
+            };
+            
+            // Canvas neu initialisieren
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            
+            const backgroundImage = new Image();
+            backgroundImage.src = startImages[sceneNumber];
+            
+            backgroundImage.onload = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+                ctx.globalCompositeOperation = "source-over";
+                canvas.style.cursor = "not-allowed";
+                canvas.style.opacity = "0.7";
+            };
+            
+            backgroundImage.onerror = function() {
+                // Fallback falls Bild nicht geladen werden kann
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#f0f0f0";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#666";
+                ctx.font = "16px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(`Bild ${sceneNumber}`, canvas.width / 2, canvas.height / 2);
+                canvas.style.cursor = "not-allowed";
+                canvas.style.opacity = "0.7";
+            };
+        }
+        
+        console.log(`Szene ${sceneNumber} zurückgesetzt`);
     }
 
     // Start button
     const startBtn = document.getElementById('start-btn');
     if (startBtn) {
         startBtn.addEventListener('click', function() {
-            console.log('Start Button geklickt');
             showScreen('intro-screen');
         });
-    } else {
-        console.error('Start Button nicht gefunden');
     }
 
     // Intro button
     const introBtn = document.getElementById('intro-btn');
     if (introBtn) {
         introBtn.addEventListener('click', function() {
-            console.log('Intro Button geklickt');
             showScreen('scene-1');
         });
     }
@@ -99,6 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Scratch-Funktionalität für jede Szene
     function setupScratchScene(sceneNumber) {
         const canvas = document.getElementById(`scratch-${sceneNumber}`);
+        const solutionImage = canvas.parentElement.querySelector('.solution-image');
         const solutionText = document.getElementById(`solution-text-${sceneNumber}`);
         const submitBtn = document.getElementById(`submit-${sceneNumber}`);
         const textarea = document.getElementById(`input-${sceneNumber}`);
@@ -123,123 +227,123 @@ document.addEventListener('DOMContentLoaded', function() {
         let isRevealed = false;
         let backgroundImageLoaded = false;
         let backgroundImage = new Image();
+        let scratchingEnabled = false;
         
         // Canvas Größe setzen und Ausgangsbild laden
         function initCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
+            console.log(`Initialisiere Canvas für Szene ${sceneNumber}`);
             
-            // Ausgangsbild auf Canvas zeichnen (unterschiedlich für jede Szene)
+            const container = canvas.parentElement;
+            
+            // Explizite Größen setzen
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            
+            console.log(`Canvas Größe Szene ${sceneNumber}:`, canvas.width, canvas.height);
+            
+            // Ausgangsbild auf Canvas zeichnen
             backgroundImage = new Image();
-            backgroundImage.crossOrigin = "anonymous";
             backgroundImage.src = startImages[sceneNumber];
             
             backgroundImage.onload = function() {
+                console.log(`Ausgangsbild ${sceneNumber} erfolgreich geladen`);
+                
                 // Canvas komplett leeren
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                // Ausgangsbild zeichnen
+                
+                // Bild an Canvas-Größe anpassen und komplett füllen
                 ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+                
                 // Rubbel-Modus zurücksetzen
                 ctx.globalCompositeOperation = "source-over";
                 backgroundImageLoaded = true;
-                console.log(`Ausgangsbild ${sceneNumber} geladen und angezeigt`);
+                
+                // Deaktiviere Rubbeln initial
+                updateScratchStatus();
+                console.log(`Canvas ${sceneNumber} initialisiert - Ausgangsbild angezeigt`);
             };
             
             backgroundImage.onerror = function() {
                 console.error(`Bild konnte nicht geladen werden: ${startImages[sceneNumber]}`);
-                // Fallback: Grauen Hintergrund zeichnen
+                // Fallback
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "#999999";
+                ctx.fillStyle = "#ffcccc";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "#666666";
-                ctx.font = "bold 20px Arial";
+                ctx.fillStyle = "#cc0000";
+                ctx.font = "14px Arial";
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
-                ctx.fillText(`Ausgangsbild ${sceneNumber}`, canvas.width / 2, canvas.height / 2);
-                ctx.globalCompositeOperation = "source-over";
+                ctx.fillText(`Bild nicht gefunden`, canvas.width / 2, canvas.height / 2);
                 backgroundImageLoaded = true;
+                
+                updateScratchStatus();
             };
         }
         
-        // Funktion zum Zurücksetzen des Canvas
-        function resetCanvas() {
-            isRevealed = false;
-            
-            if (backgroundImageLoaded) {
-                // Canvas komplett leeren
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                // Ausgangsbild neu zeichnen
-                ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-                // Rubbel-Modus zurücksetzen
-                ctx.globalCompositeOperation = "source-over";
-                console.log(`Canvas ${sceneNumber} zurückgesetzt`);
+        // Funktion zum Aktualisieren des Rubbel-Status
+        function updateScratchStatus() {
+            if (scratchingEnabled) {
+                canvas.style.cursor = "grab";
+                canvas.style.opacity = "1";
+                console.log(`Rubbeln AKTIVIERT für Szene ${sceneNumber}`);
             } else {
-                // Falls Bild noch nicht geladen, neu initialisieren
-                initCanvas();
-            }
-            
-            // Lösungstext verstecken
-            if (solutionText) {
-                solutionText.classList.remove("visible");
-            }
-            
-            // Submit-Button zurücksetzen
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Interpretation abschicken';
-            }
-            
-            // Textarea zurücksetzen
-            if (textarea) {
-                textarea.value = '';
-                textarea.disabled = false;
+                canvas.style.cursor = "not-allowed";
+                canvas.style.opacity = "0.7";
+                console.log(`Rubbeln DEAKTIVIERT für Szene ${sceneNumber}`);
             }
         }
         
         // Initialisiere Canvas
-        initCanvas();
+        setTimeout(initCanvas, 100);
         
         let scratching = false;
         let lastCheckTime = 0;
         
         // Event Listeners für Maus
-        canvas.addEventListener("mousedown", () => {
+        canvas.addEventListener("mousedown", function(e) {
+            if (!scratchingEnabled) {
+                e.preventDefault();
+                return;
+            }
             scratching = true;
             canvas.style.cursor = "grabbing";
         });
         
-        canvas.addEventListener("mouseup", () => {
+        canvas.addEventListener("mouseup", function() {
             scratching = false;
-            canvas.style.cursor = "grab";
+            updateScratchStatus();
         });
         
-        canvas.addEventListener("mouseleave", () => {
+        canvas.addEventListener("mouseleave", function() {
             scratching = false;
-            canvas.style.cursor = "grab";
+            updateScratchStatus();
         });
         
         // Event Listeners für Touch
-        canvas.addEventListener("touchstart", (e) => {
+        canvas.addEventListener("touchstart", function(e) {
+            if (!scratchingEnabled) {
+                e.preventDefault();
+                return;
+            }
             scratching = true;
-            canvas.style.cursor = "grabbing";
             e.preventDefault();
         });
         
-        canvas.addEventListener("touchend", () => {
+        canvas.addEventListener("touchend", function() {
             scratching = false;
-            canvas.style.cursor = "grab";
         });
         
-        canvas.addEventListener("touchcancel", () => {
+        canvas.addEventListener("touchcancel", function() {
             scratching = false;
-            canvas.style.cursor = "grab";
         });
         
         canvas.addEventListener("mousemove", scratch);
         canvas.addEventListener("touchmove", scratch);
         
         function scratch(e) {
-            if (!scratching || !backgroundImageLoaded) return;
+            if (!scratching || !scratchingEnabled || !backgroundImageLoaded) {
+                return;
+            }
             
             const rect = canvas.getBoundingClientRect();
             let x, y;
@@ -253,57 +357,81 @@ document.addEventListener('DOMContentLoaded', function() {
                 y = e.clientY - rect.top;
             }
             
-            // Pinsel für Rubbeln - entfernt das obere Bild
+            // Stelle sicher, dass die Koordinaten innerhalb des Canvas sind
+            x = Math.max(0, Math.min(x, canvas.width));
+            y = Math.max(0, Math.min(y, canvas.height));
+            
+            // Pinsel für Rubbeln - entfernt das obere Bild (Ausgangsbild)
             ctx.globalCompositeOperation = "destination-out";
             ctx.beginPath();
             ctx.arc(x, y, 30, 0, Math.PI * 2);
             ctx.fill();
             
-            // Überprüfe alle 200ms den Fortschritt
+            // Lösungsbild nach und nach sichtbar machen basierend auf Fortschritt
+            updateSolutionVisibility();
+            
+            // Überprüfe alle 500ms den Fortschritt
             const now = Date.now();
-            if (now - lastCheckTime > 200) {
-                revealIfEnoughRemoved();
+            if (now - lastCheckTime > 500) {
+                checkRevealProgress();
                 lastCheckTime = now;
             }
         }
         
-        function revealIfEnoughRemoved() {
-            if (isRevealed || !backgroundImageLoaded) return;
+        function updateSolutionVisibility() {
+            if (!solutionImage || isRevealed) return;
             
             try {
-                // Erstelle einen kleinen Test-Canvas für die Überprüfung
-                const testCanvas = document.createElement('canvas');
-                const testCtx = testCanvas.getContext('2d');
-                testCanvas.width = 20;
-                testCanvas.height = 20;
-                
-                // Zeichne einen kleinen Ausschnitt in der Mitte
-                testCtx.drawImage(canvas, 
-                    canvas.width / 2 - 10, canvas.height / 2 - 10, 20, 20,
-                    0, 0, 20, 20
-                );
-                
-                const imageData = testCtx.getImageData(0, 0, 20, 20);
+                // Berechne wie viel vom Bild bereits aufgedeckt ist
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 const pixels = imageData.data;
                 let transparentPixels = 0;
+                let totalPixels = 0;
                 
-                // Zähle transparente Pixel (Alpha-Wert < 50)
                 for (let i = 3; i < pixels.length; i += 4) {
+                    totalPixels++;
                     if (pixels[i] < 50) {
                         transparentPixels++;
                     }
                 }
                 
-                const ratio = transparentPixels / (pixels.length / 4);
+                const ratio = transparentPixels / totalPixels;
                 
-                console.log(`Szene ${sceneNumber}: ${Math.round(ratio * 100)}% aufgedeckt in der Mitte`);
+                // Mache Lösungsbild proportional zum Fortschritt sichtbar
+                solutionImage.style.opacity = Math.min(ratio * 2, 1);
                 
-                // Wenn genug aufgedeckt ist (30%)
-                if (ratio > 0.3) {
+            } catch (error) {
+                console.error('Fehler beim Aktualisieren der Sichtbarkeit:', error);
+            }
+        }
+        
+        function checkRevealProgress() {
+            if (isRevealed || !backgroundImageLoaded || !scratchingEnabled) return;
+            
+            try {
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixels = imageData.data;
+                let transparentPixels = 0;
+                let totalPixels = 0;
+                
+                for (let i = 3; i < pixels.length; i += 4) {
+                    totalPixels++;
+                    if (pixels[i] < 50) {
+                        transparentPixels++;
+                    }
+                }
+                
+                const ratio = transparentPixels / totalPixels;
+                
+                console.log(`Szene ${sceneNumber}: ${Math.round(ratio * 100)}% aufgedeckt`);
+                
+                // Wenn genug aufgedeckt ist (40%)
+                if (ratio > 0.4) {
                     revealSolution();
                 }
             } catch (error) {
                 console.error('Fehler beim Überprüfen:', error);
+                revealSolution();
             }
         }
         
@@ -313,28 +441,33 @@ document.addEventListener('DOMContentLoaded', function() {
             isRevealed = true;
             console.log(`Lösung für Szene ${sceneNumber} wird angezeigt`);
             
+            // Lösungsbild komplett sichtbar machen
+            if (solutionImage) {
+                solutionImage.classList.add('revealed');
+                solutionImage.style.opacity = '1';
+            }
+            
             // Zeige Lösungstext an
             if (solutionText) {
                 solutionText.classList.add("visible");
             }
-            
-            // Aktiviere Submit-Button
-            if (submitBtn) {
-                submitBtn.disabled = false;
-            }
-            
-            // Auto-Continue nach 3 Sekunden
-            setTimeout(() => {
-                if (sceneNumber < 5 && submitBtn && !submitBtn.disabled) {
-                    showScreen(`scene-${sceneNumber + 1}`);
-                } else if (sceneNumber === 5 && submitBtn && !submitBtn.disabled) {
-                    showScreen('reflection-screen');
-                }
-            }, 3000);
         }
         
         // Setup für die Texteingabe
         if (submitBtn && textarea) {
+            textarea.addEventListener('input', function() {
+                const hasText = this.value.trim().length > 0;
+                submitBtn.disabled = !hasText;
+                
+                if (hasText && !scratchingEnabled) {
+                    scratchingEnabled = true;
+                    updateScratchStatus();
+                } else if (!hasText && scratchingEnabled) {
+                    scratchingEnabled = false;
+                    updateScratchStatus();
+                }
+            });
+            
             submitBtn.addEventListener('click', function() {
                 const userAnswer = textarea.value.trim();
                 
@@ -343,29 +476,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                // Speichere die Antwort
                 saveAnswer(sceneId, userAnswer);
                 
-                // Deaktiviere den Button und das Textfeld
                 this.disabled = true;
                 this.textContent = 'Interpretation gespeichert';
                 textarea.disabled = true;
-                
-                // Sofort zur nächsten Szene wechseln
-                setTimeout(() => {
-                    if (sceneNumber < 5) {
-                        showScreen(`scene-${sceneNumber + 1}`);
-                    } else {
-                        showScreen('reflection-screen');
-                    }
-                }, 1000);
-            });
-            
-            // Enter-Taste zum Abschicken
-            textarea.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && e.ctrlKey) {
-                    submitBtn.click();
-                }
             });
         }
         
@@ -373,41 +488,65 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('resize', function() {
             setTimeout(initCanvas, 100);
         });
-        
-        // Rückgabe der reset-Funktion für den Restart-Button
-        return { resetCanvas };
     }
-
-    // Array zum Speichern der Reset-Funktionen für jede Szene
-    const sceneResetFunctions = [];
 
     // Setup für alle Scratch-Szenen
     for (let i = 1; i <= 5; i++) {
-        const resetFunction = setupScratchScene(i);
-        sceneResetFunctions.push(resetFunction);
+        setupScratchScene(i);
     }
 
-    // Restart button
-    const restartBtn = document.getElementById('restart-btn');
-    if (restartBtn) {
-        restartBtn.addEventListener('click', function() {
-            console.log('Restart Button geklickt');
-            
-            // Reset aller Szenen
-            sceneResetFunctions.forEach((resetFunc, index) => {
-                if (resetFunc && resetFunc.resetCanvas) {
-                    resetFunc.resetCanvas();
+    // Next buttons für jede Szene
+    for (let i = 1; i <= 5; i++) {
+        const nextBtn = document.getElementById(`next-${i}`);
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function() {
+                if (i < 5) {
+                    showScreen(`scene-${i + 1}`);
+                } else {
+                    showScreen('answers-screen');
                 }
             });
-            
-            // Lösche gespeicherte Antworten
-            userAnswers = {};
-            localStorage.removeItem('zwischenDenZeilenAnswers');
-            
-            // Zurück zum Start-Bildschirm
-            showScreen('start-screen');
+        }
+    }
+
+    // Next to reflection button
+    const nextToReflectionBtn = document.getElementById('next-to-reflection');
+    if (nextToReflectionBtn) {
+        nextToReflectionBtn.addEventListener('click', function() {
+            showScreen('reflection-screen');
         });
     }
 
-    console.log('Alle Event Listener wurden registriert');
+    // View answers again button
+    const viewAnswersAgainBtn = document.getElementById('view-answers-again');
+    if (viewAnswersAgainBtn) {
+        viewAnswersAgainBtn.addEventListener('click', function() {
+            showScreen('answers-screen');
+        });
+    }
+
+    // Restart button - EINFACHE UND FUNKTIONIERENDE VERSION
+    const restartBtn = document.getElementById('restart-btn');
+    if (restartBtn) {
+        restartBtn.addEventListener('click', function() {
+            console.log('=== RESTART BUTTON GEKLICKT ===');
+            
+            // 1. Alle Antworten aus localStorage löschen
+            userAnswers = {};
+            localStorage.removeItem('zwischenDenZeilenAnswers');
+            console.log('✓ Alle Antworten gelöscht');
+            
+            // 2. Alle Szenen zurücksetzen
+            for (let i = 1; i <= 5; i++) {
+                resetScene(i);
+            }
+            console.log('✓ Alle 5 Szenen zurückgesetzt');
+            
+            // 3. Zurück zum Startbildschirm
+            console.log('✓ Wechsle zum Startbildschirm');
+            showScreen('start-screen');
+            
+            console.log('=== RESTART ABGESCHLOSSEN ===');
+        });
+    }
 });

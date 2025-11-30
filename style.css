@@ -52,30 +52,36 @@ h1 {
     font-size: 2.5rem;
     margin-bottom: 20px;
     color: #333;
+    font-weight: 300;
+    letter-spacing: -0.5px;
 }
 
 h2 {
     font-size: 1.8rem;
     margin-bottom: 20px;
     color: #555;
+    font-weight: 400;
 }
 
 h3 {
     font-size: 1.4rem;
     margin-bottom: 15px;
     color: #555;
+    font-weight: 500;
 }
 
 h4 {
     font-size: 1.1rem;
     margin-bottom: 10px;
     color: #666;
+    font-weight: 600;
 }
 
 p {
     font-size: 1.2rem;
     margin-bottom: 30px;
     color: #666;
+    line-height: 1.6;
 }
 
 .btn {
@@ -86,22 +92,36 @@ p {
     font-size: 1.1rem;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
     margin-top: 20px;
+    display: inline-block;
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
 .btn:hover {
     background-color: #3a5a8c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 111, 165, 0.3);
 }
 
 .btn:active {
-    transform: translateY(1px);
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(74, 111, 165, 0.3);
 }
 
 .btn:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
+}
+
+.btn:disabled:hover {
+    background-color: #cccccc;
+    transform: none;
+    box-shadow: none;
 }
 
 /* Scene Header */
@@ -133,17 +153,30 @@ p {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    background: #f0f0f0;
+    height: 400px;
 }
 
-/* Lösungsbild - unten (immer sichtbar) */
+/* Lösungsbild - UNTEN (initial VERSTECKT) */
 .solution-image {
     width: 100%;
-    height: 400px;
+    height: 100%;
     object-fit: cover;
     display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-/* Rubbel-Canvas - oben (mit Ausgangsbild) */
+/* Lösungsbild sichtbar nach dem Rubbeln */
+.solution-image.revealed {
+    opacity: 1;
+}
+
+/* Rubbel-Canvas - OBEN (mit Ausgangsbild - immer sichtbar) */
 .scratch-canvas {
     position: absolute;
     top: 0;
@@ -152,24 +185,29 @@ p {
     height: 100%;
     cursor: grab;
     border-radius: 12px;
+    transition: opacity 0.3s ease;
+    z-index: 2;
 }
 
 .scratch-canvas:active {
     cursor: grabbing;
 }
 
-/* Text-Lösung separat */
+/* Text-Lösung */
 .solution-text {
     width: 100%;
     max-width: 700px;
     padding: 20px;
-    background-color: #f0f0f0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border-radius: 8px;
+    border-left: 4px solid #4a6fa5;
     opacity: 0;
     transform: translateY(10px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease, max-height 0.5s ease;
     max-height: 0;
     overflow: hidden;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .solution-text.visible {
@@ -181,11 +219,13 @@ p {
 .solution-text h4 {
     color: #4a6fa5;
     margin-bottom: 8px;
+    font-size: 1.2rem;
 }
 
 .solution-text p {
     margin-bottom: 0;
     color: #555;
+    line-height: 1.5;
 }
 
 .input-section {
@@ -194,6 +234,9 @@ p {
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 textarea {
@@ -204,13 +247,22 @@ textarea {
     border-radius: 8px;
     font-size: 1rem;
     resize: vertical;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
     font-family: inherit;
+    line-height: 1.4;
+    background-color: #fafafa;
 }
 
 textarea:focus {
     outline: none;
     border-color: #4a6fa5;
+    box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.1);
+    background-color: white;
+}
+
+textarea::placeholder {
+    color: #999;
+    font-style: italic;
 }
 
 .progress {
@@ -221,15 +273,16 @@ textarea:focus {
 }
 
 .progress-dot {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     background-color: #ddd;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .progress-dot.active {
     background-color: #4a6fa5;
+    transform: scale(1.2);
 }
 
 .reflection {
@@ -240,11 +293,13 @@ textarea:focus {
 .reflection h3 {
     margin-bottom: 15px;
     color: #555;
+    border-bottom: 2px solid #4a6fa5;
+    padding-bottom: 5px;
 }
 
 .answers-container {
     margin: 20px 0;
-    max-height: 300px;
+    max-height: 400px;
     overflow-y: auto;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
@@ -259,6 +314,12 @@ textarea:focus {
     padding: 15px;
     margin-bottom: 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.answer-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .answer-scene {
@@ -278,31 +339,116 @@ textarea:focus {
     display: flex;
     justify-content: space-around;
     margin-top: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
 }
 
 .stat-item {
     text-align: center;
+    padding: 10px;
 }
 
 .stat-value {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: bold;
     color: #4a6fa5;
+    margin-bottom: 5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .stat-label {
     font-size: 0.9rem;
     color: #666;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* Animation für neue Antworten */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
 }
 
 .fade-in {
     animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Styles für Rubbel-Status */
+.scratch-canvas[style*="cursor: not-allowed"] {
+    opacity: 0.7;
+}
+
+.scratch-canvas[style*="cursor: grab"] {
+    opacity: 1;
+}
+
+/* Overlay für deaktivierten Zustand */
+.scratch-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    z-index: 3;
+    pointer-events: none;
+    backdrop-filter: blur(1px);
+    border: 2px dashed rgba(74, 111, 165, 0.3);
+}
+
+.overlay-content {
+    color: #4a6fa5;
+    text-align: center;
+    padding: 20px;
+    font-size: 16px;
+    line-height: 1.4;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 80%;
+}
+
+.overlay-content p {
+    margin: 5px 0;
+    color: #4a6fa5;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Button Container für bessere Anordnung */
+.button-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.button-container .btn {
+    margin-top: 0;
+    flex: 1;
+    min-width: 200px;
+    max-width: 250px;
+}
+
+/* Focus Styles für Accessibility */
+.btn:focus,
+textarea:focus {
+    outline: 2px solid #4a6fa5;
+    outline-offset: 2px;
 }
 
 /* Responsive Design */
@@ -324,21 +470,53 @@ textarea:focus {
         font-size: 1.5rem;
     }
     
-    .image-stack {
-        max-width: 100%;
+    h3 {
+        font-size: 1.3rem;
     }
     
-    .solution-image {
+    .image-stack {
+        max-width: 100%;
         height: 300px;
     }
     
     .solution-text {
         padding: 15px;
     }
+    
+    .stats {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .button-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .button-container .btn {
+        min-width: 100%;
+        max-width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
-    .solution-image {
+    .screen {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.4rem;
+    }
+    
+    h3 {
+        font-size: 1.2rem;
+    }
+    
+    .image-stack {
         height: 250px;
     }
     
@@ -346,11 +524,13 @@ textarea:focus {
         padding: 12px;
     }
     
-    .solution-text h4 {
-        font-size: 1rem;
+    textarea {
+        height: 100px;
+        padding: 12px;
     }
     
-    .solution-text p {
-        font-size: 0.9rem;
+    .btn {
+        padding: 10px 20px;
+        font-size: 1rem;
     }
 }
