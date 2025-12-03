@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (solutionImage) {
             solutionImage.classList.remove('revealed');
             solutionImage.style.opacity = '0';
+            solutionImage.style.filter = 'brightness(1) contrast(1)';
         }
         
         // Canvas zurücksetzen
@@ -199,6 +200,71 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Particle animation system
+    class ParticleSystem {
+        constructor(canvas, x, y) {
+            this.canvas = canvas;
+            this.ctx = canvas.getContext('2d');
+            this.particles = [];
+            this.x = x;
+            this.y = y;
+            this.maxParticles = 8;
+            this.createParticles();
+        }
+
+        createParticles() {
+            const colors = [
+                'rgba(255, 255, 255, 0.9)',
+                'rgba(255, 255, 255, 0.7)',
+                'rgba(255, 255, 255, 0.5)',
+                'rgba(200, 200, 255, 0.6)'
+            ];
+
+            for (let i = 0; i < this.maxParticles; i++) {
+                this.particles.push({
+                    x: this.x,
+                    y: this.y,
+                    size: Math.random() * 4 + 2,
+                    speedX: (Math.random() - 0.5) * 8,
+                    speedY: (Math.random() - 0.5) * 8,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    life: 1,
+                    decay: Math.random() * 0.03 + 0.02
+                });
+            }
+        }
+
+        update() {
+            for (let i = this.particles.length - 1; i >= 0; i--) {
+                const p = this.particles[i];
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.life -= p.decay;
+                p.size *= 0.97;
+
+                if (p.life <= 0) {
+                    this.particles.splice(i, 1);
+                }
+            }
+        }
+
+        draw() {
+            for (const p of this.particles) {
+                this.ctx.save();
+                this.ctx.globalAlpha = p.life;
+                this.ctx.fillStyle = p.color;
+                this.ctx.beginPath();
+                this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.restore();
+            }
+        }
+
+        isDone() {
+            return this.particles.length === 0;
+        }
+    }
+
     // Scratch-Funktionalität für jede Szene
     function setupScratchScene(sceneNumber) {
         const canvas = document.getElementById(`scratch-${sceneNumber}`);
@@ -228,6 +294,14 @@ document.addEventListener('DOMContentLoaded', function() {
         let backgroundImageLoaded = false;
         let backgroundImage = new Image();
         let scratchingEnabled = false;
+        let particleSystems = [];
+        let lastParticleTime = 0;
+        const particleInterval = 50; // ms between particle bursts
+        
+        // Rubbel Sound Variablen
+        let scratchSound = document.getElementById('scratch-sound');
+        let lastSoundTime = 0;
+        const soundInterval = 150; // Mindestabstand zwischen Sound-Auslösungen in ms
         
         // Canvas Größe setzen und Ausgangsbild laden
         function initCanvas() {
@@ -293,6 +367,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // Animation für Partikel-Effekte
+        function animateParticles() {
+            if (particleSystems.length === 0) return;
+            
+            // Temporär auf normalen Modus wechseln um Partikel zu zeichnen
+            ctx.globalCompositeOperation = "source-over";
+            
+            // Update und draw particles
+            for (let i = particleSystems.length - 1; i >= 0; i--) {
+                const system = particleSystems[i];
+                system.update();
+                system.draw();
+                
+                if (system.isDone()) {
+                    particleSystems.splice(i, 1);
+                }
+            }
+            
+            // Zurück zum Rubbeleffekt
+            ctx.globalCompositeOperation = "destination-out";
+        }
+        
         // Initialisiere Canvas
         setTimeout(initCanvas, 100);
         
@@ -307,6 +403,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             scratching = true;
             canvas.style.cursor = "grabbing";
+            
+            // Optional: Sound vorbereiten für sofortiges Abspielen
+            if (scratchSound) {
+                scratchSound.currentTime = 0;
+            }
         });
         
         canvas.addEventListener("mouseup", function() {
@@ -327,6 +428,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             scratching = true;
             e.preventDefault();
+            
+            // Optional: Sound vorbereiten für sofortiges Abspielen
+            if (scratchSound) {
+                scratchSound.currentTime = 0;
+            }
         });
         
         canvas.addEventListener("touchend", function() {
@@ -361,24 +467,44 @@ document.addEventListener('DOMContentLoaded', function() {
             x = Math.max(0, Math.min(x, canvas.width));
             y = Math.max(0, Math.min(y, canvas.height));
             
+            // Rubbel Sound abspielen
+            const currentTime = Date.now();
+            if (scratchSound && currentTime - lastSoundTime > soundInterval) {
+                // Sound zurückspulen und abspielen
+                scratchSound.currentTime = 0;
+                scratchSound.volume = 0.3; // Lautstärke anpassen
+                scratchSound.play().catch(e => console.log("Sound konnte nicht abgespielt werden:", e));
+                lastSoundTime = currentTime;
+            }
+            
             // Pinsel für Rubbeln - entfernt das obere Bild (Ausgangsbild)
             ctx.globalCompositeOperation = "destination-out";
             ctx.beginPath();
             ctx.arc(x, y, 30, 0, Math.PI * 2);
             ctx.fill();
             
+            // Partikel-Effekt erzeugen
+            const now = Date.now();
+            if (now - lastParticleTime > particleInterval) {
+                particleSystems.push(new ParticleSystem(canvas, x, y));
+                lastParticleTime = now;
+            }
+            
             // Lösungsbild nach und nach sichtbar machen basierend auf Fortschritt
-            updateSolutionVisibility();
+            updateSolutionVisibility(x, y);
             
             // Überprüfe alle 500ms den Fortschritt
-            const now = Date.now();
-            if (now - lastCheckTime > 500) {
+            const currentCheckTime = Date.now();
+            if (currentCheckTime - lastCheckTime > 500) {
                 checkRevealProgress();
-                lastCheckTime = now;
+                lastCheckTime = currentCheckTime;
             }
+            
+            // Partikel animieren
+            requestAnimationFrame(animateParticles);
         }
         
-        function updateSolutionVisibility() {
+        function updateSolutionVisibility(x, y) {
             if (!solutionImage || isRevealed) return;
             
             try {
@@ -397,8 +523,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 const ratio = transparentPixels / totalPixels;
                 
-                // Mache Lösungsbild proportional zum Fortschritt sichtbar
-                solutionImage.style.opacity = Math.min(ratio * 2, 1);
+                // Progressiver Übergang mit Animationen
+                const progress = Math.min(ratio * 2, 1);
+                
+                // Glatte Opacity-Änderung
+                solutionImage.style.opacity = progress;
+                
+                // Progressive Helligkeit und Kontrast-Anpassung
+                // Am Anfang dunkler/unscharf, wird klarer je mehr man rubbelt
+                const brightness = 0.7 + (progress * 0.3); // 0.7 bis 1.0
+                const contrast = 0.8 + (progress * 0.4);   // 0.8 bis 1.2
+                const blur = Math.max(0, 3 - (progress * 3)); // 3px bis 0px
+                
+                solutionImage.style.filter = `
+                    brightness(${brightness})
+                    contrast(${contrast})
+                    blur(${blur}px)
+                `;
+                
+                // Sanfte Puls-Animation beim Rubbeln
+                if (scratching && progress < 1) {
+                    const pulseIntensity = 0.05 * Math.sin(Date.now() * 0.01);
+                    solutionImage.style.transform = `scale(${1 + pulseIntensity})`;
+                } else {
+                    solutionImage.style.transform = 'scale(1)';
+                }
                 
             } catch (error) {
                 console.error('Fehler beim Aktualisieren der Sichtbarkeit:', error);
@@ -441,15 +590,58 @@ document.addEventListener('DOMContentLoaded', function() {
             isRevealed = true;
             console.log(`Lösung für Szene ${sceneNumber} wird angezeigt`);
             
-            // Lösungsbild komplett sichtbar machen
+            // Finale Animation für das Lösungsbild
             if (solutionImage) {
                 solutionImage.classList.add('revealed');
-                solutionImage.style.opacity = '1';
+                
+                // Glatte Endanimation
+                const startTime = Date.now();
+                const duration = 800; // ms
+                
+                function animateFinalReveal() {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    // Easing-Funktion für natürliche Bewegung
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+                    
+                    solutionImage.style.opacity = easeOut;
+                    solutionImage.style.filter = `
+                        brightness(${0.7 + (easeOut * 0.3)})
+                        contrast(${0.8 + (easeOut * 0.4)})
+                        blur(${Math.max(0, 3 - (easeOut * 3))}px)
+                    `;
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animateFinalReveal);
+                    } else {
+                        // Endzustand
+                        solutionImage.style.opacity = '1';
+                        solutionImage.style.filter = 'brightness(1) contrast(1.2) blur(0)';
+                        solutionImage.style.transform = 'scale(1)';
+                    }
+                }
+                
+                animateFinalReveal();
             }
             
             // Zeige Lösungstext an
             if (solutionText) {
                 solutionText.classList.add("visible");
+            }
+            
+            // Erstelle einen abschließenden Partikel-Effekt
+            if (canvas) {
+                const rect = canvas.getBoundingClientRect();
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                
+                // Großer Partikel-Effekt in der Mitte
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        particleSystems.push(new ParticleSystem(canvas, centerX, centerY));
+                    }, i * 100);
+                }
             }
         }
         

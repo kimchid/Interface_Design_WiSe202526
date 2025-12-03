@@ -6,12 +6,7 @@
 }
 
 body {
-    /*background-image: url('images/background.png');
-    background-size: cover; /* Bild deckt gesamten Bereich ab */
-    background-position: center center; /* Bild wird mittig zentriert */
-    background-repeat: no-repeat; /* Bild wird nicht wiederholt */
-    background-attachment: fixed; /* Bild bleibt beim Scrollen fixiert */
-    background-color: #1a1919; /* Fallback-Farbe falls Bild nicht lädt */
+    background-color: #1a1919;
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -178,6 +173,7 @@ p {
 /* Lösungsbild sichtbar nach dem Rubbeln */
 .solution-image.revealed {
     opacity: 1;
+    animation: gentlePulse 3s ease-in-out infinite;
 }
 
 /* Rubbel-Canvas - OBEN (mit Ausgangsbild - immer sichtbar) */
@@ -189,12 +185,17 @@ p {
     height: 100%;
     cursor: grab;
     border-radius: 12px;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.5s ease, filter 0.5s ease;
     z-index: 2;
 }
 
 .scratch-canvas:active {
     cursor: grabbing;
+}
+
+.scratch-canvas.fading {
+    opacity: 0.3;
+    filter: blur(2px);
 }
 
 /* Text-Lösung */
@@ -382,6 +383,40 @@ textarea::placeholder {
     }
 }
 
+/* Animation für Partikel-Effekte */
+@keyframes particleFloat {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty)) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Sanftes Pulsieren für das Lösungsbild */
+@keyframes gentlePulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.01);
+    }
+}
+
+/* Glitzer-Effekt für Partikel */
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
 .fade-in {
     animation: fadeIn 0.5s ease-in-out;
 }
@@ -500,6 +535,11 @@ textarea:focus {
     .button-container .btn {
         min-width: 100%;
         max-width: 100%;
+    }
+    
+    .particle {
+        width: 3px !important;
+        height: 3px !important;
     }
 }
 
