@@ -417,8 +417,25 @@ textarea::placeholder {
     }
 }
 
+/* Audio Feedback Visuals */
+@keyframes soundPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(74, 111, 165, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(74, 111, 165, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(74, 111, 165, 0);
+    }
+}
+
 .fade-in {
     animation: fadeIn 0.5s ease-in-out;
+}
+
+.btn.sound-feedback {
+    animation: soundPulse 0.6s ease;
 }
 
 /* Styles für Rubbel-Status */
@@ -428,6 +445,17 @@ textarea::placeholder {
 
 .scratch-canvas[style*="cursor: grab"] {
     opacity: 1;
+}
+
+/* Visuelles Feedback für Rubbel-Sound */
+.scratch-canvas:active {
+    filter: brightness(1.05) contrast(1.1);
+    transition: filter 0.1s ease;
+}
+
+.btn:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
 }
 
 /* Overlay für deaktivierten Zustand */
@@ -481,6 +509,40 @@ textarea::placeholder {
     flex: 1;
     min-width: 200px;
     max-width: 250px;
+}
+
+/* Sound-Toggle Button */
+.sound-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(43, 43, 44, 0.8);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    border: none;
+    font-size: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.sound-toggle:hover {
+    background-color: rgba(43, 43, 44, 1);
+    transform: scale(1.1);
+}
+
+.sound-toggle.muted::after {
+    content: "🔇";
+}
+
+.sound-toggle:not(.muted)::after {
+    content: "🔊";
 }
 
 /* Focus Styles für Accessibility */
@@ -537,6 +599,14 @@ textarea:focus {
         max-width: 100%;
     }
     
+    .sound-toggle {
+        bottom: 10px;
+        right: 10px;
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+    
     .particle {
         width: 3px !important;
         height: 3px !important;
@@ -576,5 +646,11 @@ textarea:focus {
     .btn {
         padding: 10px 20px;
         font-size: 1rem;
+    }
+    
+    .sound-toggle {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
     }
 }

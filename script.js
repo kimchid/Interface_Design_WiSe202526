@@ -7,10 +7,53 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Screen navigation
     const screens = document.querySelectorAll('.screen');
+    
+    // Sound-Steuerung
+    let soundEnabled = true;
+    
+    // Funktion zum Abspielen von Sounds mit Fehlerbehandlung
+    function playSound(soundId, volume = 0.3) {
+        if (!soundEnabled) return;
+        
+        const sound = document.getElementById(soundId);
+        if (sound) {
+            try {
+                sound.volume = volume;
+                sound.currentTime = 0;
+                sound.play().catch(e => {
+                    console.log("Sound konnte nicht abgespielt werden:", soundId, e);
+                });
+            } catch (error) {
+                console.log("Sound Fehler:", error);
+            }
+        }
+    }
+    
+    // Sound-Toggle Funktion
+    function toggleSound() {
+        soundEnabled = !soundEnabled;
+        const soundToggle = document.getElementById('sound-toggle');
+        if (soundToggle) {
+            soundToggle.classList.toggle('muted', !soundEnabled);
+        }
+        console.log('Sound ist jetzt:', soundEnabled ? 'AN' : 'AUS');
+        
+        // Visuelles Feedback
+        playSound('click-sound', 0.2);
+    }
+    
+    // Sound-Toggle Event Listener
+    const soundToggleBtn = document.getElementById('sound-toggle');
+    if (soundToggleBtn) {
+        soundToggleBtn.addEventListener('click', toggleSound);
+    }
 
     // Show specific screen
     function showScreen(screenId) {
         console.log('Wechsle zu Screen:', screenId);
+        
+        // Screen-Übergang Sound
+        playSound('screen-transition-sound', 0.2);
         
         screens.forEach(screen => {
             screen.classList.remove('active');
@@ -33,6 +76,9 @@ document.addEventListener('DOMContentLoaded', function() {
         userAnswers[sceneId] = answer;
         localStorage.setItem('zwischenDenZeilenAnswers', JSON.stringify(userAnswers));
         console.log('Antwort gespeichert für', sceneId, ':', answer);
+        
+        // Erfolgs-Sound beim Speichern
+        playSound('submit-sound', 0.4);
     }
 
     // Funktion zum Anzeigen aller gespeicherten Antworten
@@ -109,6 +155,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Einfache Reset-Funktion für jede Szene
     function resetScene(sceneNumber) {
         console.log(`Resette Szene ${sceneNumber}`);
+        
+        // Reset-Sound
+        playSound('click-sound', 0.3);
         
         // Textarea zurücksetzen
         const textarea = document.getElementById(`input-${sceneNumber}`);
@@ -188,6 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const startBtn = document.getElementById('start-btn');
     if (startBtn) {
         startBtn.addEventListener('click', function() {
+            playSound('click-sound', 0.3);
             showScreen('intro-screen');
         });
     }
@@ -196,6 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const introBtn = document.getElementById('intro-btn');
     if (introBtn) {
         introBtn.addEventListener('click', function() {
+            playSound('click-sound', 0.3);
             showScreen('scene-1');
         });
     }
@@ -302,6 +353,10 @@ document.addEventListener('DOMContentLoaded', function() {
         let scratchSound = document.getElementById('scratch-sound');
         let lastSoundTime = 0;
         const soundInterval = 150; // Mindestabstand zwischen Sound-Auslösungen in ms
+        
+        // Für Geschwindigkeitsberechnung
+        let lastX = null;
+        let lastY = null;
         
         // Canvas Größe setzen und Ausgangsbild laden
         function initCanvas() {
@@ -463,37 +518,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 y = e.clientY - rect.top;
             }
             
-            // Stelle sicher, dass die Koordinaten innerhalb des Canvas sind
+            // Koordinaten begrenzen
             x = Math.max(0, Math.min(x, canvas.width));
             y = Math.max(0, Math.min(y, canvas.height));
             
-            // Rubbel Sound abspielen
+            // Rubbel-Sound mit variablem Volume basierend auf Geschwindigkeit
             const currentTime = Date.now();
             if (scratchSound && currentTime - lastSoundTime > soundInterval) {
-                // Sound zurückspulen und abspielen
+                // Lautstärke basierend auf Rubbelgeschwindigkeit variieren
+                let volume = 0.25;
+                if (lastX && lastY) {
+                    const distance = Math.sqrt(Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2));
+                    volume = Math.min(0.5, 0.25 + (distance / 100));
+                }
+                
+                scratchSound.volume = volume;
                 scratchSound.currentTime = 0;
-                scratchSound.volume = 0.3; // Lautstärke anpassen
-                scratchSound.play().catch(e => console.log("Sound konnte nicht abgespielt werden:", e));
+                scratchSound.play().catch(e => console.log("Rubbel-Sound konnte nicht abgespielt werden:", e));
                 lastSoundTime = currentTime;
             }
             
-            // Pinsel für Rubbeln - entfernt das obere Bild (Ausgangsbild)
+            // Rubbel-Effekt
             ctx.globalCompositeOperation = "destination-out";
             ctx.beginPath();
             ctx.arc(x, y, 30, 0, Math.PI * 2);
             ctx.fill();
             
-            // Partikel-Effekt erzeugen
+            // Partikel-Effekt
             const now = Date.now();
             if (now - lastParticleTime > particleInterval) {
                 particleSystems.push(new ParticleSystem(canvas, x, y));
                 lastParticleTime = now;
             }
             
-            // Lösungsbild nach und nach sichtbar machen basierend auf Fortschritt
+            // Lösungsbild sichtbar machen
             updateSolutionVisibility(x, y);
             
-            // Überprüfe alle 500ms den Fortschritt
+            // Fortschritt überprüfen
             const currentCheckTime = Date.now();
             if (currentCheckTime - lastCheckTime > 500) {
                 checkRevealProgress();
@@ -502,6 +563,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Partikel animieren
             requestAnimationFrame(animateParticles);
+            
+            // Letzte Position für Geschwindigkeitsberechnung speichern
+            lastX = x;
+            lastY = y;
         }
         
         function updateSolutionVisibility(x, y) {
@@ -590,6 +655,9 @@ document.addEventListener('DOMContentLoaded', function() {
             isRevealed = true;
             console.log(`Lösung für Szene ${sceneNumber} wird angezeigt`);
             
+            // Aha-Moment Sound
+            playSound('reveal-sound', 0.4);
+            
             // Finale Animation für das Lösungsbild
             if (solutionImage) {
                 solutionImage.classList.add('revealed');
@@ -647,9 +715,26 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Setup für die Texteingabe
         if (submitBtn && textarea) {
+            // Sound für Textarea-Eingabe
+            let typingTimer;
+            let lastTypedTime = 0;
+            const typeDelay = 300; // ms zwischen Type-Sounds
+            
             textarea.addEventListener('input', function() {
                 const hasText = this.value.trim().length > 0;
                 submitBtn.disabled = !hasText;
+                
+                // Type-Sound mit Verzögerung
+                const currentTime = Date.now();
+                if (currentTime - lastTypedTime > typeDelay) {
+                    playSound('type-sound', 0.1);
+                    lastTypedTime = currentTime;
+                }
+                
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(() => {
+                    // Reset typing timer
+                }, typeDelay * 2);
                 
                 if (hasText && !scratchingEnabled) {
                     scratchingEnabled = true;
@@ -664,6 +749,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const userAnswer = textarea.value.trim();
                 
                 if (userAnswer === '') {
+                    playSound('error-sound', 0.3);
                     alert('Bitte gib deine Interpretation ein.');
                     return;
                 }
@@ -692,6 +778,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const nextBtn = document.getElementById(`next-${i}`);
         if (nextBtn) {
             nextBtn.addEventListener('click', function() {
+                playSound('click-sound', 0.3);
                 if (i < 5) {
                     showScreen(`scene-${i + 1}`);
                 } else {
@@ -705,6 +792,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const nextToReflectionBtn = document.getElementById('next-to-reflection');
     if (nextToReflectionBtn) {
         nextToReflectionBtn.addEventListener('click', function() {
+            playSound('click-sound', 0.3);
             showScreen('reflection-screen');
         });
     }
@@ -713,6 +801,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const viewAnswersAgainBtn = document.getElementById('view-answers-again');
     if (viewAnswersAgainBtn) {
         viewAnswersAgainBtn.addEventListener('click', function() {
+            playSound('click-sound', 0.3);
             showScreen('answers-screen');
         });
     }
@@ -721,6 +810,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const restartBtn = document.getElementById('restart-btn');
     if (restartBtn) {
         restartBtn.addEventListener('click', function() {
+            playSound('click-sound', 0.3);
             console.log('=== RESTART BUTTON GEKLICKT ===');
             
             // 1. Alle Antworten aus localStorage löschen
@@ -741,4 +831,15 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('=== RESTART ABGESCHLOSSEN ===');
         });
     }
+
+    // Sound für alle Buttons außer Submit-Buttons
+    document.querySelectorAll('.btn:not([id^="submit-"])').forEach(button => {
+        button.addEventListener('click', function() {
+            // Visuelles Feedback
+            this.classList.add('sound-feedback');
+            setTimeout(() => {
+                this.classList.remove('sound-feedback');
+            }, 600);
+        });
+    });
 });

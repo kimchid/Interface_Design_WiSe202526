@@ -7,10 +7,44 @@
     <link rel="stylesheet" href="style.css">
     <!-- Rubbel Sound -->
     <audio id="scratch-sound" preload="auto">
-        <source src="scratch-sound.m4a" type="audio/mpeg">
+        <source src="sounds/scratch.m4a" type="audio/mpeg">
+    </audio>
+    
+    <!-- UI Sound-Konzept für "Zwischen den Zeilen" -->
+    <!-- Klick/Button Sounds -->
+    <audio id="click-sound" preload="auto">
+        <source src="sounds/click.wav" type="audio/mpeg">
+    </audio>
+
+    <!-- Text-Eingabe Bestätigung -->
+    <audio id="type-sound" preload="auto">
+        <source src="sounds/type.wav" type="audio/mpeg">
+    </audio>
+
+    <!-- Absende-Bestätigung -->
+    <audio id="submit-sound" preload="auto">
+        <source src="sounds/click.wav" type="audio/mpeg">
+    </audio>
+
+    <!-- Bild-Enthüllung "Aha-Moment" -->
+    <audio id="reveal-sound" preload="auto">
+        <source src="sounds/reveal.wav" type="audio/mpeg">
+    </audio>
+
+    <!-- Screen-Wechsel Sound -->
+    <audio id="screen-transition-sound" preload="auto">
+        <source src="sounds/transition.wav" type="audio/mpeg">
+    </audio>
+
+    <!-- Error/Alert Sound -->
+    <audio id="error-sound" preload="auto">
+        <source src="sounds/error.wav" type="audio/mpeg">
     </audio>
 </head>
 <body>
+    <!-- Sound Toggle Button (optional) -->
+    <button class="sound-toggle" id="sound-toggle">🔊</button>
+    
     <div class="container">
         <!-- Start Screen -->
         <div id="start-screen" class="screen active">
@@ -226,6 +260,12 @@
                 <p>Welche Erkenntnis hast du aus dieser Übung gewonnen?</p>
             </div>
             
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-answers">0</div>
+                    <div class="stat-label">Interpretationen</div>
+                </div>
+            </div>
             
             <div class="button-container">
                 <button class="btn" id="view-answers-again">Nochmal Interpretationen ansehen</button>
