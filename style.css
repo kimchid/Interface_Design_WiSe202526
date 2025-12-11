@@ -29,7 +29,7 @@ body {
 .screen {
     background-color: white;
     border-radius: 8px;
-    padding: 30px;
+    padding: 40px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     text-align: center;
     opacity: 0;
@@ -37,18 +37,34 @@ body {
     transition: opacity 0.5s ease, transform 0.5s ease;
     position: absolute;
     width: calc(100% - 40px);
-    max-width: 1200px;
+    max-width: 900px;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
-    min-height: 600px;
 }
 
 .screen.active {
     opacity: 1;
     transform: translate(-50%, -50%);
     pointer-events: all;
+}
+
+/* Start- und Intro-Screens behalten ursprüngliche Höhe */
+#start-screen,
+#intro-screen {
+    min-height: auto;
+}
+
+/* Scene Screens erhalten Querformat */
+#scene-1,
+#scene-2, 
+#scene-3,
+#scene-4,
+#scene-5 {
+    max-width: 1200px;
+    min-height: 700px; /* Höher für mehr Platz */
+    padding: 30px;
 }
 
 h1 {
@@ -138,51 +154,58 @@ p {
     font-style: italic;
 }
 
+/* QUERFORMAT LAYOUT für Scene Screens */
 .scene-layout {
     display: flex;
-    gap: 40px;
+    gap: 50px; /* Mehr Abstand zwischen Bild und Textbereich */
     align-items: flex-start;
     margin-top: 20px;
-    min-height: 500px;
+    min-height: 550px;
 }
 
 .image-section {
-    flex: 1;
+    flex: 1.5; /* Etwas breiter für Bildbereich */
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 300px; /* MEHR ABSTAND zwischen Scratch-Container und Lösungstext */
 }
 
 .text-section {
-    flex: 1;
+    flex: 1; /* Etwas schmaler für Textbereich */
     display: flex;
     flex-direction: column;
     gap: 20px;
     min-height: 100%;
+    justify-content: flex-end; /* NEU: Verschiebt alles nach unten */
+    padding-bottom: 20px; /* NEU: Etwas Abstand vom Boden */
 }
 
+/* Scratch Container Anpassungen */
 .scratch-container {
     position: relative;
     width: 100%;
-    height: 400px;
+    height: 500px; /* Etwas höher */
     display: flex;
     flex-direction: column;
     align-items: center;
+    object-fit: cover;
+    padding-bottom: 80px
 }
 
 .image-stack {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 400px;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     background: #f0f0f0;
+    object-fit: cover;
 }
 
 .solution-image {
     width: 100%;
-    height: 100%;
+    height: 400px!important;
     object-fit: cover;
     display: block;
     position: absolute;
@@ -196,6 +219,7 @@ p {
 .solution-image.revealed {
     opacity: 1;
     animation: gentlePulse 3s ease-in-out infinite;
+    height: 400px !important
 }
 
 .scratch-canvas {
@@ -208,6 +232,7 @@ p {
     border-radius: 12px;
     transition: opacity 0.5s ease, filter 0.5s ease;
     z-index: 2;
+    object-fit: cover
 }
 
 .scratch-canvas:active {
@@ -219,9 +244,10 @@ p {
     filter: blur(2px);
 }
 
+/* Lösungstext - FLEXIBLER MIT MEHR PLATZ */
 .solution-text {
     width: 100%;
-    padding: 15px;
+    padding: 20px; /* Mehr Padding */
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border-radius: 8px;
     border-left: 4px solid #2b2b2c;
@@ -231,38 +257,67 @@ p {
     max-height: 0;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex-grow: 1; /* Kann sich ausdehnen */
+    margin-top: 20px     
 }
 
 .solution-text.visible {
     opacity: 1;
     transform: translateY(0);
-    max-height: 150px;
+    max-height: none;
+    flex-grow: 1; 
+    min-height: 150px;
+    overflow: visible;
+    margin-top: 100px;
 }
 
 .solution-text h4 {
     color: #2b2b2c;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .solution-text p {
     margin-bottom: 0;
     color: #555;
-    line-height: 1.5;
+    line-height: 1.6; /* Bessere Lesbarkeit */
     font-size: 1rem;
+    min-height: 60px; /* Mindesthöhe für Text */
+}
+
+/* Scrollbar für Lösungstext */
+.solution-text.visible::-webkit-scrollbar {
+    width: 6px;
+}
+
+.solution-text.visible::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.solution-text.visible::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.solution-text.visible::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
 }
 
 .input-section {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px; /* Mehr Abstand zwischen Elementen */
     height: 100%;
+    justify-content: flex-end;
+    margin-bottom: 40px; /* HIER: Extra Abstand vom Boden */
 }
 
 textarea {
     width: 100%;
-    height: 180px;
+    height: 200px; /* Höher für mehr Text */
     padding: 15px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
@@ -270,10 +325,11 @@ textarea {
     resize: vertical;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     font-family: inherit;
-    line-height: 1.4;
+    line-height: 1.5;
     background-color: #fafafa;
     flex: 1;
     min-height: 180px;
+    margin-top: 60px;
 }
 
 textarea:focus {
@@ -291,26 +347,28 @@ textarea::placeholder {
 .interpretation-buttons {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: auto;
+    gap: 12px; /* Mehr Abstand zwischen Buttons */
+    margin-top: 180px;
 }
 
 .interpretation-buttons .btn {
     margin-top: 0;
     width: 100%;
+    padding: 14px 20px; /* Größere Buttons */
+    font-size: 1.1rem;
 }
 
 .progress {
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 .progress-dot {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     background-color: #ddd;
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -318,7 +376,7 @@ textarea::placeholder {
 
 .progress-dot.active {
     background-color: #2b2b2c;
-    transform: scale(1.2);
+    transform: scale(1.3);
 }
 
 .reflection {
@@ -335,7 +393,7 @@ textarea::placeholder {
 
 .answers-container {
     margin: 20px 0;
-    max-height: 400px;
+    max-height: 500px;
     overflow-y: auto;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
@@ -589,19 +647,27 @@ textarea:focus {
 @media (max-width: 1024px) {
     .scene-layout {
         flex-direction: column;
-        gap: 30px;
+        gap: 40px;
     }
     
     .image-section, .text-section {
         width: 100%;
     }
     
+    .image-section {
+        gap: 20px;
+    }
+    
     .image-stack {
-        height: 350px;
+        height: 380px;
     }
     
     textarea {
-        height: 150px;
+        height: 180px;
+    }
+    
+    .solution-text.visible {
+        max-height: 250px;
     }
 }
 
@@ -613,7 +679,15 @@ textarea:focus {
     .screen {
         padding: 20px;
         width: calc(100% - 20px);
+    }
+    
+    #scene-1,
+    #scene-2, 
+    #scene-3,
+    #scene-4,
+    #scene-5 {
         min-height: auto;
+        padding: 20px;
     }
     
     h1 {
@@ -629,25 +703,37 @@ textarea:focus {
     }
     
     .scene-layout {
-        gap: 20px;
+        gap: 25px;
     }
     
     .image-stack {
-        height: 300px;
+        height: 320px;
+    }
+    
+    .scratch-container {
+        height: 320px;
     }
     
     .solution-text {
-        padding: 12px;
+        padding: 15px;
+    }
+    
+    .solution-text.visible {
+        max-height: 200px;
     }
     
     textarea {
-        height: 120px;
+        height: 140px;
         padding: 12px;
     }
     
     .btn {
         padding: 10px 20px;
         font-size: 1rem;
+    }
+    
+    .interpretation-buttons .btn {
+        padding: 12px 20px;
     }
     
     .sound-toggle {
@@ -677,21 +763,33 @@ textarea:focus {
     }
     
     .image-stack {
-        height: 250px;
+        height: 280px;
+    }
+    
+    .scratch-container {
+        height: 280px;
     }
     
     .solution-text {
-        padding: 10px;
+        padding: 12px;
+    }
+    
+    .solution-text.visible {
+        max-height: 180px;
     }
     
     textarea {
-        height: 100px;
+        height: 120px;
         padding: 10px;
     }
     
     .btn {
         padding: 8px 16px;
         font-size: 0.9rem;
+    }
+    
+    .interpretation-buttons .btn {
+        padding: 10px 16px;
     }
     
     .sound-toggle {
