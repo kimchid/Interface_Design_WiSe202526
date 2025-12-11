@@ -364,10 +364,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let lastX = null;
         let lastY = null;
         
-        // Verfolge gerubbelte Fläche separat
-        let scratchedArea = 0;
-        let totalArea = 0;
-        
         // Canvas Größe setzen und Ausgangsbild laden
         function initCanvas() {
             console.log(`Initialisiere Canvas für Szene ${sceneNumber}`);
@@ -379,9 +375,6 @@ document.addEventListener('DOMContentLoaded', function() {
             canvas.height = container.clientHeight;
             
             console.log(`Canvas Größe Szene ${sceneNumber}:`, canvas.width, canvas.height);
-            
-            // Gesamtfläche berechnen
-            totalArea = canvas.width * canvas.height;
             
             // Ausgangsbild auf Canvas zeichnen
             backgroundImage = new Image();
@@ -557,33 +550,6 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.arc(x, y, 30, 0, Math.PI * 2);
             ctx.fill();
             
-            // **KORRIGIERT: Erhöhte Flächenberechnung für schnellere Sichtbarkeit**
-            const circleArea = Math.PI * 30 * 30;
-            
-            if (lastX && lastY) {
-                // Berechne Bewegungsdistanz
-                const distance = Math.sqrt(Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2));
-                
-                // Mehr Fläche für schnellere Sichtbarkeit
-                let areaMultiplier = 0.15; // Basiswert erhöht
-                
-                if (distance > 30) {
-                    // Lange, schnelle Bewegung -> viel neue Fläche
-                    areaMultiplier = 0.25;
-                } else if (distance < 5) {
-                    // Sehr kurze Bewegung -> minimale neue Fläche
-                    areaMultiplier = 0.05;
-                } else if (distance < 15) {
-                    // Mittlere Bewegung -> moderate Fläche
-                    areaMultiplier = 0.1;
-                }
-                
-                scratchedArea += circleArea * areaMultiplier;
-            } else {
-                // Erster Punkt: moderate Fläche
-                scratchedArea += circleArea * 0.1;
-            }
-            
             // Partikel-Effekt
             const now = Date.now();
             if (now - lastParticleTime > particleInterval) {
@@ -591,12 +557,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 lastParticleTime = now;
             }
             
-            // Lösungsbild sichtbar machen basierend auf gerubbelter Fläche
-            updateSolutionVisibility();
+            // Lösungsbild sichtbar machen
+            updateSolutionVisibility(x, y);
             
-            // Fortschritt überprüfen (alle 800ms)
+            // Fortschritt überprüfen
             const currentCheckTime = Date.now();
-            if (currentCheckTime - lastCheckTime > 800) {
+            if (currentCheckTime - lastCheckTime > 500) {
                 checkRevealProgress();
                 lastCheckTime = currentCheckTime;
             }
@@ -609,32 +575,36 @@ document.addEventListener('DOMContentLoaded', function() {
             lastY = y;
         }
         
-        function updateSolutionVisibility() {
+        function updateSolutionVisibility(x, y) {
             if (!solutionImage || isRevealed) return;
             
             try {
-                // Berechne prozentuale gerubbelte Fläche
-                const ratio = Math.min(scratchedArea / totalArea, 1);
+                // Berechne wie viel vom Bild bereits aufgedeckt ist
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixels = imageData.data;
+                let transparentPixels = 0;
+                let totalPixels = 0;
                 
-                // **KORRIGIERT: Schnellere Sichtbarkeit bei 70% Schwelle**
-                let visibilityProgress = 0;
-                if (ratio < 0.3) {
-                    // Unter 30%: moderat sichtbar (0-40% Opacity)
-                    visibilityProgress = ratio * 1.3;
-                } else if (ratio < 0.6) {
-                    // 30-60%: gut sichtbar (40-80% Opacity)
-                    visibilityProgress = 0.4 + (ratio - 0.3) * 1.3;
-                } else {
-                    // Über 60%: fast vollständig sichtbar (80-100% Opacity)
-                    visibilityProgress = 0.8 + (ratio - 0.6) * 1.0;
+                for (let i = 3; i < pixels.length; i += 4) {
+                    totalPixels++;
+                    if (pixels[i] < 50) {
+                        transparentPixels++;
+                    }
                 }
                 
-                solutionImage.style.opacity = Math.min(visibilityProgress, 1);
+                const ratio = transparentPixels / totalPixels;
+                
+                // Progressiver Übergang mit Animationen
+                const progress = Math.min(ratio * 2, 1);
+                
+                // Glatte Opacity-Änderung
+                solutionImage.style.opacity = progress;
                 
                 // Progressive Helligkeit und Kontrast-Anpassung
-                const brightness = 0.5 + (ratio * 0.5); // 0.5 bis 1.0
-                const contrast = 0.6 + (ratio * 0.6);   // 0.6 bis 1.2
-                const blur = Math.max(0, 6 - (ratio * 6)); // 6px bis 0px
+                // Am Anfang dunkler/unscharf, wird klarer je mehr man rubbelt
+                const brightness = 0.7 + (progress * 0.3); // 0.7 bis 1.0
+                const contrast = 0.8 + (progress * 0.4);   // 0.8 bis 1.2
+                const blur = Math.max(0, 3 - (progress * 3)); // 3px bis 0px
                 
                 solutionImage.style.filter = `
                     brightness(${brightness})
@@ -643,17 +613,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 
                 // Sanfte Puls-Animation beim Rubbeln
-                if (scratching && ratio < 1) {
-                    const pulseIntensity = 0.01 * Math.sin(Date.now() * 0.01);
+                if (scratching && progress < 1) {
+                    const pulseIntensity = 0.05 * Math.sin(Date.now() * 0.01);
                     solutionImage.style.transform = `scale(${1 + pulseIntensity})`;
                 } else {
                     solutionImage.style.transform = 'scale(1)';
                 }
                 
-                // Konsolenausgabe nur bei größeren Fortschritten
-                const currentPercent = Math.round(ratio * 100);
-                if (currentPercent % 15 === 0 && currentPercent > 0 && currentPercent < 100) {
-                    console.log(`Szene ${sceneNumber}: ${currentPercent}% gerubbelt -> ${Math.round(visibilityProgress * 100)}% sichtbar`);
+                // NEU: Wenn mehr als 90% ausgerubbelt sind, Partikel ausblenden
+                if (ratio > 0.9 && particleSystems.length > 0) {
+                    fadeOutParticles();
                 }
                 
             } catch (error) {
@@ -665,7 +634,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Nur wenn Partikel vorhanden sind
             if (particleSystems.length === 0) return;
             
-            console.log(`Partikel für Szene ${sceneNumber} werden ausgeblendet (>70% gerubbelt)`);
+            console.log(`Partikel für Szene ${sceneNumber} werden ausgeblendet (>90% gerubbelt)`);
             
             // Alle Partikel-Effekte ausblenden
             setTimeout(() => {
@@ -695,20 +664,29 @@ document.addEventListener('DOMContentLoaded', function() {
             if (isRevealed || !backgroundImageLoaded || !scratchingEnabled) return;
             
             try {
-                // Berechne prozentuale gerubbelte Fläche
-                const ratio = Math.min(scratchedArea / totalArea, 1);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixels = imageData.data;
+                let transparentPixels = 0;
+                let totalPixels = 0;
                 
-                // Debug-Ausgabe nur bei signifikanten Änderungen
-                if (Math.round(ratio * 100) % 20 === 0 && ratio > 0.1) {
-                    console.log(`Szene ${sceneNumber}: ${Math.round(ratio * 100)}% aufgedeckt`);
+                for (let i = 3; i < pixels.length; i += 4) {
+                    totalPixels++;
+                    if (pixels[i] < 50) {
+                        transparentPixels++;
+                    }
                 }
                 
-                // **KORRIGIERT: Auf 70% reduziert für schnellere Offenlegung**
-                if (ratio > 0.7) {
+                const ratio = transparentPixels / totalPixels;
+                
+                console.log(`Szene ${sceneNumber}: ${Math.round(ratio * 100)}% aufgedeckt`);
+                
+                // Wenn genug aufgedeckt ist (90%)
+                if (ratio > 0.9) {
                     revealSolution();
                 }
             } catch (error) {
                 console.error('Fehler beim Überprüfen:', error);
+                revealSolution();
             }
         }
         
@@ -716,7 +694,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (isRevealed) return;
             
             isRevealed = true;
-            console.log(`Lösung für Szene ${sceneNumber} wird angezeigt (${Math.round((scratchedArea / totalArea) * 100)}% gerubbelt)`);
+            console.log(`Lösung für Szene ${sceneNumber} wird angezeigt`);
             
             // Aha-Moment Sound
             playSound('reveal-sound', 0.4);
@@ -761,7 +739,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 solutionText.classList.add("visible");
             }
             
-            // Wenn noch nicht geschehen, Partikel ausblenden
+            // Wenn noch nicht geschehen, Partikel ausblenden (falls >90% noch nicht erreicht)
             if (particleSystems.length > 0) {
                 fadeOutParticles();
             }
@@ -833,8 +811,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Resize Handler
         window.addEventListener('resize', function() {
             setTimeout(initCanvas, 100);
-            // Bei Resize auch die Gesamtfläche neu berechnen
-            totalArea = canvas.width * canvas.height;
         });
     }
 

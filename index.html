@@ -59,7 +59,7 @@
             <button class="btn" id="intro-btn">Weiter</button>
         </div>
 
-        <!-- Scene Screens -->
+        <!-- Scene Screens mit Querformat Layout -->
         <div id="scene-1" class="screen">
             <div class="progress">
                 <div class="progress-dot active"></div>
@@ -75,22 +75,33 @@
                 <div class="scratch-instruction">Gib zuerst deine Interpretation ein, dann rubble das Bild frei</div>
             </div>
 
-            <div class="scratch-container">
-                <div class="image-stack">
-                    <img src="images/solution_1.jpg" alt="Lösung Szene 1" class="solution-image">
-                    <canvas id="scratch-1" class="scratch-canvas"></canvas>
+            <!-- NEUES QUERFORMAT LAYOUT -->
+            <div class="scene-layout">
+                <!-- Linke Seite: Bild -->
+                <div class="image-section">
+                    <div class="scratch-container">
+                        <div class="image-stack">
+                            <img src="images/solution_1.jpg" alt="Lösung Szene 1" class="solution-image">
+                            <canvas id="scratch-1" class="scratch-canvas"></canvas>
+                        </div>
+                        
+                        <div class="solution-text" id="solution-text-1">
+                            <h4>Was wirklich passiert:</h4>
+                            <p>Der Mann hat Schlafprobleme und kauft Schlaftabletten, um besser schlafen zu können. Er leidet unter Stress bei der Arbeit.</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="solution-text" id="solution-text-1">
-                    <h4>Was wirklich passiert:</h4>
-                    <p>Der Mann hat Schlafprobleme und kauft Schlaftabletten, um besser schlafen zu können. Er leidet unter Stress bei der Arbeit.</p>
+
+                <!-- Rechte Seite: Interpretation -->
+                <div class="text-section">
+                    <div class="input-section">
+                        <textarea id="input-1" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
+                        <div class="interpretation-buttons">
+                            <button class="btn" id="submit-1" disabled>Interpretation abschicken</button>
+                            <button class="btn" id="next-1">Weiter zur nächsten Szene</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="input-section">
-                <textarea id="input-1" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
-                <button class="btn" id="submit-1" disabled>Interpretation abschicken</button>
-                <button class="btn" id="next-1">Weiter zur nächsten Szene</button>
             </div>
         </div>
 
@@ -109,22 +120,30 @@
                 <div class="scratch-instruction">Gib zuerst deine Interpretation ein, dann rubble das Bild frei</div>
             </div>
 
-            <div class="scratch-container">
-                <div class="image-stack">
-                    <img src="images/solution_2.jpg" alt="Lösung Szene 2" class="solution-image">
-                    <canvas id="scratch-2" class="scratch-canvas"></canvas>
+            <div class="scene-layout">
+                <div class="image-section">
+                    <div class="scratch-container">
+                        <div class="image-stack">
+                            <img src="images/solution_2.jpg" alt="Lösung Szene 2" class="solution-image">
+                            <canvas id="scratch-2" class="scratch-canvas"></canvas>
+                        </div>
+                        
+                        <div class="solution-text" id="solution-text-2">
+                            <h4>Was wirklich passiert:</h4>
+                            <p>.</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="solution-text" id="solution-text-2">
-                    <h4>Was wirklich passiert:</h4>
-                    <p>.</p>
+
+                <div class="text-section">
+                    <div class="input-section">
+                        <textarea id="input-2" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
+                        <div class="interpretation-buttons">
+                            <button class="btn" id="submit-2" disabled>Interpretation abschicken</button>
+                            <button class="btn" id="next-2">Weiter zur nächsten Szene</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="input-section">
-                <textarea id="input-2" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
-                <button class="btn" id="submit-2" disabled>Interpretation abschicken</button>
-                <button class="btn" id="next-2">Weiter zur nächsten Szene</button>
             </div>
         </div>
 
@@ -143,22 +162,30 @@
                 <div class="scratch-instruction">Gib zuerst deine Interpretation ein, dann rubble das Bild frei</div>
             </div>
 
-            <div class="scratch-container">
-                <div class="image-stack">
-                    <img src="images/solution_3.jpg" alt="Lösung Szene 3" class="solution-image">
-                    <canvas id="scratch-3" class="scratch-canvas"></canvas>
+            <div class="scene-layout">
+                <div class="image-section">
+                    <div class="scratch-container">
+                        <div class="image-stack">
+                            <img src="images/solution_3.jpg" alt="Lösung Szene 3" class="solution-image">
+                            <canvas id="scratch-3" class="scratch-canvas"></canvas>
+                        </div>
+                        
+                        <div class="solution-text" id="solution-text-3">
+                            <h4>Was wirklich passiert:</h4>
+                            <p>.</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="solution-text" id="solution-text-3">
-                    <h4>Was wirklich passiert:</h4>
-                    <p>.</p>
+
+                <div class="text-section">
+                    <div class="input-section">
+                        <textarea id="input-3" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
+                        <div class="interpretation-buttons">
+                            <button class="btn" id="submit-3" disabled>Interpretation abschicken</button>
+                            <button class="btn" id="next-3">Weiter zur nächsten Szene</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="input-section">
-                <textarea id="input-3" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
-                <button class="btn" id="submit-3" disabled>Interpretation abschicken</button>
-                <button class="btn" id="next-3">Weiter zur nächsten Szene</button>
             </div>
         </div>
 
@@ -177,22 +204,30 @@
                 <div class="scratch-instruction">Gib zuerst deine Interpretation ein, dann rubble das Bild frei</div>
             </div>
 
-            <div class="scratch-container">
-                <div class="image-stack">
-                    <img src="images/solution_4.jpg" alt="Lösung Szene 4" class="solution-image">
-                    <canvas id="scratch-4" class="scratch-canvas"></canvas>
+            <div class="scene-layout">
+                <div class="image-section">
+                    <div class="scratch-container">
+                        <div class="image-stack">
+                            <img src="images/solution_4.jpg" alt="Lösung Szene 4" class="solution-image">
+                            <canvas id="scratch-4" class="scratch-canvas"></canvas>
+                        </div>
+                        
+                        <div class="solution-text" id="solution-text-4">
+                            <h4>Was wirklich passiert:</h4>
+                            <p>.</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="solution-text" id="solution-text-4">
-                    <h4>Was wirklich passiert:</h4>
-                    <p>.</p>
+
+                <div class="text-section">
+                    <div class="input-section">
+                        <textarea id="input-4" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
+                        <div class="interpretation-buttons">
+                            <button class="btn" id="submit-4" disabled>Interpretation abschicken</button>
+                            <button class="btn" id="next-4">Weiter zur nächsten Szene</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="input-section">
-                <textarea id="input-4" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
-                <button class="btn" id="submit-4" disabled>Interpretation abschicken</button>
-                <button class="btn" id="next-4">Weiter zur nächsten Szene</button>
             </div>
         </div>
 
@@ -211,22 +246,30 @@
                 <div class="scratch-instruction">Gib zuerst deine Interpretation ein, dann rubble das Bild frei</div>
             </div>
 
-            <div class="scratch-container">
-                <div class="image-stack">
-                    <img src="images/solution_5.jpg" alt="Lösung Szene 5" class="solution-image">
-                    <canvas id="scratch-5" class="scratch-canvas"></canvas>
+            <div class="scene-layout">
+                <div class="image-section">
+                    <div class="scratch-container">
+                        <div class="image-stack">
+                            <img src="images/solution_5.jpg" alt="Lösung Szene 5" class="solution-image">
+                            <canvas id="scratch-5" class="scratch-canvas"></canvas>
+                        </div>
+                        
+                        <div class="solution-text" id="solution-text-5">
+                            <h4>Was wirklich passiert:</h4>
+                            <p>.</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="solution-text" id="solution-text-5">
-                    <h4>Was wirklich passiert:</h4>
-                    <p>.</p>
+
+                <div class="text-section">
+                    <div class="input-section">
+                        <textarea id="input-5" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
+                        <div class="interpretation-buttons">
+                            <button class="btn" id="submit-5" disabled>Interpretation abschicken</button>
+                            <button class="btn" id="next-5">Zu deinen Interpretationen</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="input-section">
-                <textarea id="input-5" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
-                <button class="btn" id="submit-5" disabled>Interpretation abschicken</button>
-                <button class="btn" id="next-5">Zu deinen Interpretationen</button>
             </div>
         </div>
 

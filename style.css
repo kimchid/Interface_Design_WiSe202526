@@ -7,13 +7,16 @@
 
 body {
     background-color: #1a1919;
+    background-image: url("images/background.png");
+    background-size: cover;
+    background-position: center;
     margin: 0;
     padding: 0;
     min-height: 100vh;
 }
 
 .container {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
     min-height: 100vh;
@@ -26,7 +29,7 @@ body {
 .screen {
     background-color: white;
     border-radius: 8px;
-    padding: 40px;
+    padding: 30px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     text-align: center;
     opacity: 0;
@@ -34,11 +37,12 @@ body {
     transition: opacity 0.5s ease, transform 0.5s ease;
     position: absolute;
     width: calc(100% - 40px);
-    max-width: 900px;
+    max-width: 1200px;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
+    min-height: 600px;
 }
 
 .screen.active {
@@ -123,7 +127,6 @@ p {
     box-shadow: none;
 }
 
-/* Scene Header */
 .scene-header {
     margin-bottom: 25px;
 }
@@ -135,28 +138,48 @@ p {
     font-style: italic;
 }
 
-/* Scratch Container */
+.scene-layout {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-top: 20px;
+    min-height: 500px;
+}
+
+.image-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.text-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 100%;
+}
+
 .scratch-container {
     position: relative;
-    margin: 30px 0;
+    width: 100%;
+    height: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
 }
 
 .image-stack {
     position: relative;
     width: 100%;
-    max-width: 700px;
+    height: 100%;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     background: #f0f0f0;
-    height: 400px;
 }
 
-/* Lösungsbild - UNTEN (initial VERSTECKT) */
 .solution-image {
     width: 100%;
     height: 100%;
@@ -170,13 +193,11 @@ p {
     transition: opacity 0.3s ease;
 }
 
-/* Lösungsbild sichtbar nach dem Rubbeln */
 .solution-image.revealed {
     opacity: 1;
     animation: gentlePulse 3s ease-in-out infinite;
 }
 
-/* Rubbel-Canvas - OBEN (mit Ausgangsbild - immer sichtbar) */
 .scratch-canvas {
     position: absolute;
     top: 0;
@@ -198,11 +219,9 @@ p {
     filter: blur(2px);
 }
 
-/* Text-Lösung */
 .solution-text {
     width: 100%;
-    max-width: 700px;
-    padding: 20px;
+    padding: 15px;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border-radius: 8px;
     border-left: 4px solid #2b2b2c;
@@ -211,14 +230,13 @@ p {
     transition: opacity 0.5s ease, transform 0.5s ease, max-height 0.5s ease;
     max-height: 0;
     overflow: hidden;
-    margin-top: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .solution-text.visible {
     opacity: 1;
     transform: translateY(0);
-    max-height: 200px;
+    max-height: 150px;
 }
 
 .solution-text h4 {
@@ -231,22 +249,20 @@ p {
     margin-bottom: 0;
     color: #555;
     line-height: 1.5;
+    font-size: 1rem;
 }
 
 .input-section {
-    margin: 30px 0;
-    width: 100%;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 15px;
+    height: 100%;
 }
 
 textarea {
     width: 100%;
-    height: 120px;
+    height: 180px;
     padding: 15px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
@@ -256,6 +272,8 @@ textarea {
     font-family: inherit;
     line-height: 1.4;
     background-color: #fafafa;
+    flex: 1;
+    min-height: 180px;
 }
 
 textarea:focus {
@@ -270,8 +288,21 @@ textarea::placeholder {
     font-style: italic;
 }
 
+.interpretation-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.interpretation-buttons .btn {
+    margin-top: 0;
+    width: 100%;
+}
+
 .progress {
-    margin-top: 30px;
+    margin-top: 0;
+    margin-bottom: 20px;
     display: flex;
     justify-content: center;
     gap: 8px;
@@ -371,7 +402,6 @@ textarea::placeholder {
     letter-spacing: 0.5px;
 }
 
-/* Animation für neue Antworten */
 @keyframes fadeIn {
     from { 
         opacity: 0; 
@@ -383,7 +413,6 @@ textarea::placeholder {
     }
 }
 
-/* Animation für Partikel-Effekte */
 @keyframes particleFloat {
     0% {
         transform: translate(0, 0) rotate(0deg);
@@ -395,7 +424,6 @@ textarea::placeholder {
     }
 }
 
-/* Sanftes Pulsieren für das Lösungsbild */
 @keyframes gentlePulse {
     0%, 100% {
         transform: scale(1);
@@ -405,7 +433,6 @@ textarea::placeholder {
     }
 }
 
-/* Glitzer-Effekt für Partikel */
 @keyframes sparkle {
     0%, 100% {
         opacity: 0.3;
@@ -417,7 +444,6 @@ textarea::placeholder {
     }
 }
 
-/* Audio Feedback Visuals */
 @keyframes soundPulse {
     0% {
         box-shadow: 0 0 0 0 rgba(74, 111, 165, 0.4);
@@ -438,7 +464,6 @@ textarea::placeholder {
     animation: soundPulse 0.6s ease;
 }
 
-/* Styles für Rubbel-Status */
 .scratch-canvas[style*="cursor: not-allowed"] {
     opacity: 0.7;
 }
@@ -447,7 +472,6 @@ textarea::placeholder {
     opacity: 1;
 }
 
-/* Visuelles Feedback für Rubbel-Sound */
 .scratch-canvas:active {
     filter: brightness(1.05) contrast(1.1);
     transition: filter 0.1s ease;
@@ -458,7 +482,6 @@ textarea::placeholder {
     transition: transform 0.1s ease;
 }
 
-/* Overlay für deaktivierten Zustand */
 .scratch-overlay {
     position: absolute;
     top: 0;
@@ -495,7 +518,6 @@ textarea::placeholder {
     font-weight: bold;
 }
 
-/* Button Container für bessere Anordnung */
 .button-container {
     display: flex;
     gap: 15px;
@@ -511,7 +533,6 @@ textarea::placeholder {
     max-width: 250px;
 }
 
-/* Sound-Toggle Button */
 .sound-toggle {
     position: fixed;
     bottom: 20px;
@@ -545,14 +566,45 @@ textarea::placeholder {
     content: "🔊";
 }
 
-/* Focus Styles für Accessibility */
 .btn:focus,
 textarea:focus {
     outline: 2px solid #2b2b2c;
     outline-offset: 2px;
 }
 
-/* Responsive Design */
+.gray-particle {
+    background-color: rgba(100, 100, 100, 0.8) !important;
+    box-shadow: 0 0 4px rgba(100, 100, 100, 0.5);
+}
+
+@keyframes fadeOutParticles {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.particles-fading {
+    animation: fadeOutParticles 1s ease-in-out forwards;
+}
+
+@media (max-width: 1024px) {
+    .scene-layout {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .image-section, .text-section {
+        width: 100%;
+    }
+    
+    .image-stack {
+        height: 350px;
+    }
+    
+    textarea {
+        height: 150px;
+    }
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 10px;
@@ -561,6 +613,7 @@ textarea:focus {
     .screen {
         padding: 20px;
         width: calc(100% - 20px);
+        min-height: auto;
     }
     
     h1 {
@@ -575,28 +628,26 @@ textarea:focus {
         font-size: 1.3rem;
     }
     
+    .scene-layout {
+        gap: 20px;
+    }
+    
     .image-stack {
-        max-width: 100%;
         height: 300px;
     }
     
     .solution-text {
-        padding: 15px;
+        padding: 12px;
     }
     
-    .stats {
-        flex-direction: column;
-        gap: 15px;
+    textarea {
+        height: 120px;
+        padding: 12px;
     }
     
-    .button-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .button-container .btn {
-        min-width: 100%;
-        max-width: 100%;
+    .btn {
+        padding: 10px 20px;
+        font-size: 1rem;
     }
     
     .sound-toggle {
@@ -605,11 +656,6 @@ textarea:focus {
         width: 35px;
         height: 35px;
         font-size: 16px;
-    }
-    
-    .particle {
-        width: 3px !important;
-        height: 3px !important;
     }
 }
 
@@ -635,17 +681,17 @@ textarea:focus {
     }
     
     .solution-text {
-        padding: 12px;
+        padding: 10px;
     }
     
     textarea {
         height: 100px;
-        padding: 12px;
+        padding: 10px;
     }
     
     .btn {
-        padding: 10px 20px;
-        font-size: 1rem;
+        padding: 8px 16px;
+        font-size: 0.9rem;
     }
     
     .sound-toggle {
