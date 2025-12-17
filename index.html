@@ -23,7 +23,7 @@
 
     <!-- Absende-Bestätigung -->
     <audio id="submit-sound" preload="auto">
-        <source src="sounds/click.wav" type="audio/mpeg">
+        <source src="sounds/submit.wav" type="audio/mpeg">
     </audio>
 
     <!-- Bild-Enthüllung "Aha-Moment" -->
@@ -36,21 +36,24 @@
         <source src="sounds/transition.wav" type="audio/mpeg">
     </audio>
 
-    <!-- Error/Alert Sound -->
-    <audio id="error-sound" preload="auto">
-        <source src="sounds/error.wav" type="audio/mpeg">
+    <!-- Füge dies zu deinen anderen Audio-Elementen hinzu -->
+    <audio id="pulse-sound" preload="auto">
+    <source src="sounds/pulse.wav" type="audio/wav">
     </audio>
+
 </head>
 <body>
+    
+    <div class="smoke"></div>
     <!-- Sound Toggle Button (optional) -->
     <button class="sound-toggle" id="sound-toggle">🔊</button>
     
     <div class="container">
         <!-- Start Screen (UNVERÄNDERT) -->
-        <div id="start-screen" class="screen active">
-            <h1>Zwischen den Zeilen</h1>
-            <button class="btn" id="start-btn">START</button>
-        </div>
+       <div id="start-screen" class="screen start-screen active">
+    <h1 class="start-title">Zwischen den Zeilen</h1>
+    <button class="btn start-btn" id="start-btn">START</button>
+</div>
 
         <!-- Introduction Screen (UNVERÄNDERT) -->
         <div id="intro-screen" class="screen">
@@ -71,7 +74,7 @@
             </div>
             
             <div class="scene-header">
-                <h3>Was glaubst du passiert hier gerade? Warum nimmt er diese Schlafetabletten?</h3>
+                <h3>Was glaubst du passiert hier gerade?</h3>
                 <div class="scratch-instruction">Gib zuerst deine Interpretation ein, dann rubble das Bild frei</div>
             </div>
 
@@ -97,12 +100,18 @@
                     <div class="input-section">
                         <textarea id="input-1" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
                         <div class="interpretation-buttons">
-                            <button class="btn" id="submit-1" disabled>Interpretation abschicken</button>
-                            <button class="btn" id="next-1">Weiter zur nächsten Szene</button>
+                            <button class="btn submit-btn" id="submit-1" disabled>Interpretation abschicken</button>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <!-- NEU: Navigation Button rechts mittig -->
+            <button class="next-scene-btn" id="next-1">
+                <svg class="next-arrow" viewBox="0 0 24 24">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            </button>
         </div>
 
         <div id="scene-2" class="screen">
@@ -130,7 +139,7 @@
                         
                         <div class="solution-text" id="solution-text-2">
                             <h4>Was wirklich passiert:</h4>
-                            <p>.</p>
+                            <p> Die Frau leidet unter einer starken Depression, auch wenn man es ihr nicht sofort ansieht.</p>
                         </div>
                     </div>
                 </div>
@@ -139,12 +148,18 @@
                     <div class="input-section">
                         <textarea id="input-2" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
                         <div class="interpretation-buttons">
-                            <button class="btn" id="submit-2" disabled>Interpretation abschicken</button>
-                            <button class="btn" id="next-2">Weiter zur nächsten Szene</button>
+                            <button class="btn submit-btn" id="submit-2" disabled>Interpretation abschicken</button>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <!-- NEU: Navigation Button rechts mittig -->
+            <button class="next-scene-btn" id="next-2">
+                <svg class="next-arrow" viewBox="0 0 24 24">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            </button>
         </div>
 
         <div id="scene-3" class="screen">
@@ -172,7 +187,7 @@
                         
                         <div class="solution-text" id="solution-text-3">
                             <h4>Was wirklich passiert:</h4>
-                            <p>.</p>
+                            <p>Der Mann war einmal sehr reich aber auch spielsüchtig und so hat er sein ganzes Vermögen verloren.</p>
                         </div>
                     </div>
                 </div>
@@ -181,12 +196,18 @@
                     <div class="input-section">
                         <textarea id="input-3" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
                         <div class="interpretation-buttons">
-                            <button class="btn" id="submit-3" disabled>Interpretation abschicken</button>
-                            <button class="btn" id="next-3">Weiter zur nächsten Szene</button>
+                            <button class="btn submit-btn" id="submit-3" disabled>Interpretation abschicken</button>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <!-- NEU: Navigation Button rechts mittig -->
+            <button class="next-scene-btn" id="next-3">
+                <svg class="next-arrow" viewBox="0 0 24 24">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            </button>
         </div>
 
         <div id="scene-4" class="screen">
@@ -223,12 +244,18 @@
                     <div class="input-section">
                         <textarea id="input-4" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
                         <div class="interpretation-buttons">
-                            <button class="btn" id="submit-4" disabled>Interpretation abschicken</button>
-                            <button class="btn" id="next-4">Weiter zur nächsten Szene</button>
+                            <button class="btn submit-btn" id="submit-4" disabled>Interpretation abschicken</button>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <!-- NEU: Navigation Button rechts mittig -->
+            <button class="next-scene-btn" id="next-4">
+                <svg class="next-arrow" viewBox="0 0 24 24">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            </button>
         </div>
 
         <div id="scene-5" class="screen">
@@ -265,12 +292,18 @@
                     <div class="input-section">
                         <textarea id="input-5" placeholder="Was denkst du, was hier passiert? Schreibe deine Interpretation..."></textarea>
                         <div class="interpretation-buttons">
-                            <button class="btn" id="submit-5" disabled>Interpretation abschicken</button>
-                            <button class="btn" id="next-5">Zu deinen Interpretationen</button>
+                            <button class="btn submit-btn" id="submit-5" disabled>Interpretation abschicken</button>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <!-- NEU: Navigation Button rechts mittig -->
+            <button class="next-scene-btn" id="next-5">
+                <svg class="next-arrow" viewBox="0 0 24 24">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            </button>
         </div>
 
         <!-- Answers Screen (Zweitletzte Seite) -->
@@ -291,7 +324,7 @@
                 <p>Deine Interpretation wird von deinen eigenen Erfahrungen, Emotionen und Annahmen beeinflusst.</p>
             <div class="reflection">
                 <h3>Wie oft hast du negativ / positiv interpretiert?</h3>
-                <p>Deine Interpretationen wurden nicht bewertet, aber vielleicht möchtest du darüber nachdenken, ob du eher zu negativen oder positiven Interpretationen neigst.</p>
+                <p>Neigst du eher zu negativen oder positiven Interpretationen?</p>
                 
                 <h3>Welche Emotionen hast du gespürt?</h3>
                 <p>Hattest du Mitgefühl, Sorge, Verständnis oder vielleicht auch Vorurteile?</p>
@@ -303,12 +336,6 @@
                 <p>Welche Erkenntnis hast du aus dieser Übung gewonnen?</p>
             </div>
             
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-value" id="total-answers">0</div>
-                    <div class="stat-label">Interpretationen</div>
-                </div>
-            </div>
             
             <div class="button-container">
                 <button class="btn" id="view-answers-again">Nochmal Interpretationen ansehen</button>

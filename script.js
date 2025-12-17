@@ -729,6 +729,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const startTime = Date.now();
                 const duration = 800; // ms
                 
+                // Füge den Puls-Sound nach 500ms hinzu (wenn die Puls-Animation beginnt)
+                setTimeout(() => {
+                    playSound('pulse-sound', 0.8); // Leiserer Sound für das Pulsieren
+                }, 800);
+                
                 function animateFinalReveal() {
                     const elapsed = Date.now() - startTime;
                     const progress = Math.min(elapsed / duration, 1);
@@ -750,6 +755,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         solutionImage.style.opacity = '1';
                         solutionImage.style.filter = 'brightness(1) contrast(1.2) blur(0)';
                         solutionImage.style.transform = 'scale(1)';
+                        
+                        // Optional: Einen zusätzlichen leisen Sound am Ende der Animation
+                        setTimeout(() => {
+                            playSound('pulse-sound', 0.1);
+                        }, 200);
                     }
                 }
                 

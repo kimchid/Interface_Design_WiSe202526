@@ -7,16 +7,113 @@
 
 body {
     background-color: #1a1919;
-    background-image: url("images/background.png");
-    background-size: cover;
-    background-position: center;
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    background-size: 120% auto;
+    background-size: cover;
+    background-position: center;
+}
+
+.smoke {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+
+  background: url("images/background.png") center bottom / cover no-repeat;
+
+  opacity: 0;
+  filter: blur(6px);
+
+  animation:
+    smokeRise 25s linear infinite, /* schneller und länger sichtbar */
+    smokeMorph 8s ease-in-out infinite alternate, /* schnellere Morphs */
+    backgroundMove 30s linear infinite, /* schnellere Bewegung */
+    fadeIn 1.5s ease-out forwards; /* schnelleres Einblenden */
+
+  mask-image: linear-gradient(
+    to top,
+    transparent 0%,
+    black 25%,
+    black 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to top,
+    transparent 0%,
+    black 25%,
+    black 100%
+  );
+}
+
+@keyframes smokeRise {
+  0% {
+    transform: translateY(120%) scale(1);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  60% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-80%) scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes smokeMorph {
+  0% {
+    transform: scaleX(1) scaleY(1);
+  }
+  25% {
+    transform: scaleX(1.03) scaleY(0.97);
+  }
+  50% {
+    transform: scaleX(0.97) scaleY(1.03);
+  }
+  75% {
+    transform: scaleX(1.02) scaleY(0.98);
+  }
+  100% {
+    transform: scaleX(1) scaleY(1);
+  }
+}
+
+@keyframes backgroundMove {
+  0% {
+    background-position: center bottom;
+  }
+  50% {
+    background-position: 10% 90%;
+  }
+  100% {
+    background-position: center bottom;
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 0.8;
+  }
+}
+
+.smoke::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("images/background.png") center / cover no-repeat;
+  opacity: 0.5;
+  filter: blur(25px);
+  animation: smokeRise 30s linear infinite reverse,
+             smokeMorph 10s ease-in-out infinite alternate,
+             backgroundMove 50s linear infinite reverse;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 500px;
     margin: 0 auto;
     padding: 20px;
     min-height: 100vh;
@@ -27,10 +124,9 @@ body {
 }
 
 .screen {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0);
     border-radius: 8px;
     padding: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     text-align: center;
     opacity: 0;
     transform: translateY(20px);
@@ -42,6 +138,36 @@ body {
     top: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
+}
+
+.start-screen {
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    pointer-events: all;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    max-width: 900px;
+}
+
+.start-title {
+    font-size: 4rem;
+    font-weight: 300;
+    color: white;
+    letter-spacing: -1px;
+    text-align: center;
+
+    /* leichte Lesbarkeit auf Bild */
+    text-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(0, 0, 0, 0.4);
+}
+
+.start-title {
+    animation: fadeIn 1.2s ease;
 }
 
 .screen.active {
@@ -56,21 +182,20 @@ body {
     min-height: auto;
 }
 
-/* Scene Screens erhalten Querformat */
+/* Scene Screens */
 #scene-1,
 #scene-2, 
 #scene-3,
 #scene-4,
 #scene-5 {
-    max-width: 1200px;
-    min-height: 700px; /* Höher für mehr Platz */
+    max-width: 900px;
     padding: 30px;
 }
 
 h1 {
     font-size: 2.5rem;
     margin-bottom: 20px;
-    color: #333;
+    color: #ffffff;
     font-weight: 300;
     letter-spacing: -0.5px;
 }
@@ -78,28 +203,28 @@ h1 {
 h2 {
     font-size: 1.8rem;
     margin-bottom: 20px;
-    color: #555;
+    color: #ffffff;
     font-weight: 400;
 }
 
 h3 {
     font-size: 1.4rem;
     margin-bottom: 15px;
-    color: #555;
+    color: #ffffff;
     font-weight: 500;
 }
 
 h4 {
     font-size: 1.1rem;
     margin-bottom: 10px;
-    color: #666;
+    color: #ffffff;
     font-weight: 600;
 }
 
 p {
     font-size: 1.2rem;
     margin-bottom: 30px;
-    color: #666;
+    color: #ffffff;
     line-height: 1.6;
 }
 
@@ -143,6 +268,83 @@ p {
     box-shadow: none;
 }
 
+/* NEU: Next Scene Button - Pfeil im Kreis rechts mittig */
+.next-scene-btn {
+    position: fixed;
+    right: -50px;
+    top: 37%;
+    transform: translateY(-50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #2b2b2c;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    opacity: 0.9;
+}
+
+.next-scene-btn:hover {
+    background-color: #646d7a;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    opacity: 1;
+}
+
+.next-scene-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.next-scene-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: translateY(-50%);
+    opacity: 0.5;
+}
+
+.next-scene-btn:disabled:hover {
+    background-color: #cccccc;
+    transform: translateY(-50%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Pfeil SVG */
+.next-arrow {
+    width: 32px;
+    height: 32px;
+    fill: white;
+}
+
+/* Submit Button - jetzt ohne den Next-Button */
+.submit-btn {
+    margin-top: 15px;
+    width: 100%;
+}
+
+/* Scene Layout anpassen */
+.scene-layout {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.image-section {
+    flex: 1;
+    min-width: 0; /* Wichtig für korrekte Skalierung */
+}
+
+.text-section {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Scene Header */
 .scene-header {
     margin-bottom: 25px;
 }
@@ -154,58 +356,52 @@ p {
     font-style: italic;
 }
 
-/* QUERFORMAT LAYOUT für Scene Screens */
-.scene-layout {
+/* Progress Dots - größerer und konstanter Abstand */
+.progress {
+    margin: 0 0 40px 0; /* Vergrößerter Abstand nach unten */
     display: flex;
-    gap: 50px; /* Mehr Abstand zwischen Bild und Textbereich */
-    align-items: flex-start;
-    margin-top: 20px;
-    min-height: 550px;
+    justify-content: center;
+    gap: 12px;
 }
 
-.image-section {
-    flex: 1.5; /* Etwas breiter für Bildbereich */
-    display: flex;
-    flex-direction: column;
-    gap: 300px; /* MEHR ABSTAND zwischen Scratch-Container und Lösungstext */
+.progress-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #ddd;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.text-section {
-    flex: 1; /* Etwas schmaler für Textbereich */
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    min-height: 100%;
-    justify-content: flex-end; /* NEU: Verschiebt alles nach unten */
-    padding-bottom: 20px; /* NEU: Etwas Abstand vom Boden */
+.progress-dot.active {
+    background-color: #2b2b2c;
+    transform: scale(1.3);
 }
 
-/* Scratch Container Anpassungen */
+/* Scratch Container */
 .scratch-container {
     position: relative;
-    width: 100%;
-    height: 500px; /* Etwas höher */
+    margin: 30px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    object-fit: cover;
-    padding-bottom: 80px
+    gap: 20px;
 }
 
 .image-stack {
     position: relative;
     width: 100%;
-    height: 400px;
+    max-width: 700px;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     background: #f0f0f0;
-    object-fit: cover;
+    height: 400px;
 }
 
+/* Lösungsbild - UNTEN (initial VERSTECKT) */
 .solution-image {
     width: 100%;
-    height: 400px!important;
+    height: 100%;
     object-fit: cover;
     display: block;
     position: absolute;
@@ -216,12 +412,13 @@ p {
     transition: opacity 0.3s ease;
 }
 
+/* Lösungsbild sichtbar nach dem Rubbeln */
 .solution-image.revealed {
     opacity: 1;
     animation: gentlePulse 3s ease-in-out infinite;
-    height: 400px !important
 }
 
+/* Rubbel-Canvas - OBEN (mit Ausgangsbild - immer sichtbar) */
 .scratch-canvas {
     position: absolute;
     top: 0;
@@ -232,7 +429,6 @@ p {
     border-radius: 12px;
     transition: opacity 0.5s ease, filter 0.5s ease;
     z-index: 2;
-    object-fit: cover
 }
 
 .scratch-canvas:active {
@@ -244,10 +440,11 @@ p {
     filter: blur(2px);
 }
 
-/* Lösungstext - FLEXIBLER MIT MEHR PLATZ */
+/* Text-Lösung */
 .solution-text {
     width: 100%;
-    padding: 20px; /* Mehr Padding */
+    max-width: 700px;
+    padding: 20px;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border-radius: 8px;
     border-left: 4px solid #2b2b2c;
@@ -256,68 +453,42 @@ p {
     transition: opacity 0.5s ease, transform 0.5s ease, max-height 0.5s ease;
     max-height: 0;
     overflow: hidden;
+    margin-top: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    flex-grow: 1; /* Kann sich ausdehnen */
-    margin-top: 20px     
 }
 
 .solution-text.visible {
     opacity: 1;
     transform: translateY(0);
-    max-height: none;
-    flex-grow: 1; 
-    min-height: 150px;
-    overflow: visible;
-    margin-top: 100px;
+    max-height: 200px;
 }
 
 .solution-text h4 {
     color: #2b2b2c;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     font-size: 1.2rem;
-    font-weight: 600;
 }
 
 .solution-text p {
     margin-bottom: 0;
     color: #555;
-    line-height: 1.6; /* Bessere Lesbarkeit */
-    font-size: 1rem;
-    min-height: 60px; /* Mindesthöhe für Text */
-}
-
-/* Scrollbar für Lösungstext */
-.solution-text.visible::-webkit-scrollbar {
-    width: 6px;
-}
-
-.solution-text.visible::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-.solution-text.visible::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-}
-
-.solution-text.visible::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+    line-height: 1.5;
 }
 
 .input-section {
-    flex: 1;
+    margin: 30px 0;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Mehr Abstand zwischen Elementen */
-    height: 100%;
-    justify-content: flex-end;
-    margin-bottom: 40px; /* HIER: Extra Abstand vom Boden */
+    gap: 15px;
 }
 
 textarea {
     width: 100%;
-    height: 200px; /* Höher für mehr Text */
+    height: 120px;
     padding: 15px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
@@ -325,11 +496,8 @@ textarea {
     resize: vertical;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     font-family: inherit;
-    line-height: 1.5;
+    line-height: 1.4;
     background-color: #fafafa;
-    flex: 1;
-    min-height: 180px;
-    margin-top: 60px;
 }
 
 textarea:focus {
@@ -347,36 +515,13 @@ textarea::placeholder {
 .interpretation-buttons {
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Mehr Abstand zwischen Buttons */
-    margin-top: 180px;
+    gap: 12px;
+    margin-top: 10px;
 }
 
 .interpretation-buttons .btn {
     margin-top: 0;
     width: 100%;
-    padding: 14px 20px; /* Größere Buttons */
-    font-size: 1.1rem;
-}
-
-.progress {
-    margin-top: 0;
-    margin-bottom: 25px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-
-.progress-dot {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background-color: #ddd;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.progress-dot.active {
-    background-color: #2b2b2c;
-    transform: scale(1.3);
 }
 
 .reflection {
@@ -386,14 +531,14 @@ textarea::placeholder {
 
 .reflection h3 {
     margin-bottom: 15px;
-    color: #555;
+    color: #ffffff;
     border-bottom: 2px solid #2b2b2c;
     padding-bottom: 5px;
 }
 
 .answers-container {
     margin: 20px 0;
-    max-height: 500px;
+    max-height: 400px;
     overflow-y: auto;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
@@ -429,37 +574,7 @@ textarea::placeholder {
     line-height: 1.5;
 }
 
-.stats {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 30px;
-    padding: 20px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-}
-
-.stat-item {
-    text-align: center;
-    padding: 10px;
-}
-
-.stat-value {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #2b2b2c;
-    margin-bottom: 5px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.stat-label {
-    font-size: 0.9rem;
-    color: #666;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
+/* Animation für neue Antworten */
 @keyframes fadeIn {
     from { 
         opacity: 0; 
@@ -471,34 +586,13 @@ textarea::placeholder {
     }
 }
 
-@keyframes particleFloat {
-    0% {
-        transform: translate(0, 0) rotate(0deg);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(var(--tx), var(--ty)) rotate(360deg);
-        opacity: 0;
-    }
-}
-
+/* Sanftes Pulsieren für das Lösungsbild */
 @keyframes gentlePulse {
     0%, 100% {
         transform: scale(1);
     }
     50% {
         transform: scale(1.01);
-    }
-}
-
-@keyframes sparkle {
-    0%, 100% {
-        opacity: 0.3;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1.2);
     }
 }
 
@@ -522,6 +616,7 @@ textarea::placeholder {
     animation: soundPulse 0.6s ease;
 }
 
+/* Styles für Rubbel-Status */
 .scratch-canvas[style*="cursor: not-allowed"] {
     opacity: 0.7;
 }
@@ -540,6 +635,7 @@ textarea::placeholder {
     transition: transform 0.1s ease;
 }
 
+/* Overlay für deaktivierten Zustand */
 .scratch-overlay {
     position: absolute;
     top: 0;
@@ -576,6 +672,7 @@ textarea::placeholder {
     font-weight: bold;
 }
 
+/* Button Container für bessere Anordnung */
 .button-container {
     display: flex;
     gap: 15px;
@@ -644,33 +741,7 @@ textarea:focus {
     animation: fadeOutParticles 1s ease-in-out forwards;
 }
 
-@media (max-width: 1024px) {
-    .scene-layout {
-        flex-direction: column;
-        gap: 40px;
-    }
-    
-    .image-section, .text-section {
-        width: 100%;
-    }
-    
-    .image-section {
-        gap: 20px;
-    }
-    
-    .image-stack {
-        height: 380px;
-    }
-    
-    textarea {
-        height: 180px;
-    }
-    
-    .solution-text.visible {
-        max-height: 250px;
-    }
-}
-
+/* Responsive Design */
 @media (max-width: 768px) {
     .container {
         padding: 10px;
@@ -679,15 +750,6 @@ textarea:focus {
     .screen {
         padding: 20px;
         width: calc(100% - 20px);
-    }
-    
-    #scene-1,
-    #scene-2, 
-    #scene-3,
-    #scene-4,
-    #scene-5 {
-        min-height: auto;
-        padding: 20px;
     }
     
     h1 {
@@ -702,38 +764,32 @@ textarea:focus {
         font-size: 1.3rem;
     }
     
-    .scene-layout {
-        gap: 25px;
+    .progress {
+        margin: 0 0 30px 0; /* Konsistent auch auf mobilen Geräten */
     }
     
     .image-stack {
-        height: 320px;
-    }
-    
-    .scratch-container {
-        height: 320px;
+        max-width: 100%;
+        height: 300px;
     }
     
     .solution-text {
         padding: 15px;
     }
     
-    .solution-text.visible {
-        max-height: 200px;
+    .stats {
+        flex-direction: column;
+        gap: 15px;
     }
     
-    textarea {
-        height: 140px;
-        padding: 12px;
+    .button-container {
+        flex-direction: column;
+        align-items: center;
     }
     
-    .btn {
-        padding: 10px 20px;
-        font-size: 1rem;
-    }
-    
-    .interpretation-buttons .btn {
-        padding: 12px 20px;
+    .button-container .btn {
+        min-width: 100%;
+        max-width: 100%;
     }
     
     .sound-toggle {
@@ -742,6 +798,43 @@ textarea:focus {
         width: 35px;
         height: 35px;
         font-size: 16px;
+    }
+    
+    /* Responsive Anpassungen für Next Button */
+    .next-scene-btn {
+        position: fixed;
+        right: 15px;
+        top: auto;
+        bottom: 20px;
+        transform: none;
+        width: 50px;
+        height: 50px;
+    }
+    
+    .next-scene-btn:hover {
+        transform: scale(1.1);
+    }
+    
+    .next-scene-btn:active {
+        transform: scale(0.95);
+    }
+    
+    .next-scene-btn:disabled {
+        transform: none;
+    }
+    
+    .next-scene-btn:disabled:hover {
+        transform: none;
+    }
+    
+    .next-arrow {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .scene-layout {
+        flex-direction: column;
+        gap: 20px;
     }
 }
 
@@ -762,39 +855,151 @@ textarea:focus {
         font-size: 1.2rem;
     }
     
-    .image-stack {
-        height: 280px;
+    .progress {
+        margin: 0 0 25px 0; /* Konsistent auch auf sehr kleinen Geräten */
     }
     
-    .scratch-container {
-        height: 280px;
+    .progress-dot {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .image-stack {
+        height: 250px;
     }
     
     .solution-text {
         padding: 12px;
     }
     
-    .solution-text.visible {
-        max-height: 180px;
-    }
-    
     textarea {
-        height: 120px;
-        padding: 10px;
+        height: 100px;
+        padding: 12px;
     }
     
     .btn {
-        padding: 8px 16px;
-        font-size: 0.9rem;
-    }
-    
-    .interpretation-buttons .btn {
-        padding: 10px 16px;
+        padding: 10px 20px;
+        font-size: 1rem;
     }
     
     .sound-toggle {
         width: 30px;
         height: 30px;
         font-size: 14px;
+    }
+    
+    /* Responsive Anpassungen für Next Button */
+    .next-scene-btn {
+        right: 10px;
+        bottom: 15px;
+        width: 45px;
+        height: 45px;
+    }
+    
+    .next-arrow {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* NEUES VERTIKALES LAYOUT - Option A */
+.scene-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Bildbereich nimmt volle Breite */
+.image-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Textbereich nimmt volle Breite */
+.text-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Scratch Container - bleibt gleich groß */
+.scratch-container {
+    position: relative;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Image Stack - behält seine Größe bei */
+.image-stack {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    background: #f0f0f0;
+    height: 400px; /* Beibehaltung der gleichen Höhe */
+}
+
+/* Input Section - bleibt zentriert */
+.input-section {
+    margin: 0;
+    width: 100%;
+    max-width: 700px; /* Gleiche Breite wie das Bild */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Progress Dots - Abstand anpassen */
+.progress {
+    margin: 0 0 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* Scene Header - zentrieren */
+.scene-header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Button für Interpretation - bleibt gleich */
+.submit-btn {
+    margin-top: 0;
+    width: 100%;
+}
+
+/* Responsive Anpassungen für mobile Geräte */
+@media (max-width: 768px) {
+    .image-stack {
+        max-width: 100%;
+        height: 300px; /* Proportionale Verkleinerung für mobile Geräte */
+    }
+    
+    .input-section {
+        max-width: 100%;
+    }
+    
+    .scene-layout {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .image-stack {
+        height: 250px; /* Weiter proportional verkleinert für sehr kleine Geräte */
+    }
+    
+    .scene-layout {
+        gap: 10px;
     }
 }
