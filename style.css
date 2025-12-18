@@ -17,87 +17,110 @@ body {
     background-position: center;
 }
 
+/* ÄNDERE DIESE TEILE IM SMOKE-BEREICH */
+
 .smoke {
   position: fixed;
   inset: 0;
   z-index: -1;
-
   background: url("images/background.png") center bottom / cover no-repeat;
-
   opacity: 0;
-  filter: blur(6px);
+  filter: blur(8px); /* Erhöhte Unschärfe für mehr Tiefe */
 
+  /* OPTIMIERTE ANIMATIONEN FÜR GROSSE BILDSCHIRME */
   animation:
-    smokeRise 25s linear infinite, /* schneller und länger sichtbar */
-    smokeMorph 8s ease-in-out infinite alternate, /* schnellere Morphs */
-    backgroundMove 30s linear infinite, /* schnellere Bewegung */
-    fadeIn 1.5s ease-out forwards; /* schnelleres Einblenden */
+    smokeRise 20s linear infinite, /* Schnellere Animation */
+    smokeMorph 12s ease-in-out infinite alternate, /* Langsamere, natürlichere Morphs */
+    backgroundMove 40s linear infinite, /* Langsamere Hintergrundbewegung */
+    fadeIn 2s ease-out forwards;
 
   mask-image: linear-gradient(
     to top,
-    transparent 0%,
-    black 25%,
+    transparent 5%,
+    black 40%,
     black 100%
   );
   -webkit-mask-image: linear-gradient(
     to top,
-    transparent 0%,
-    black 25%,
+    transparent 5%,
+    black 40%,
     black 100%
   );
 }
 
+/* OPTIMIERTE ANIMATION FÜR GROSSE BILDSCHIRME */
 @keyframes smokeRise {
   0% {
-    transform: translateY(120%) scale(1);
+    transform: translateY(100%) scale(1);
     opacity: 0;
   }
-  30% {
+  20% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  80% {
     opacity: 0.6;
   }
-  60% {
-    opacity: 0.8;
-  }
   100% {
-    transform: translateY(-80%) scale(1.5);
+    transform: translateY(-100%) scale(1.8); /* Mehr Skalierung für große Bildschirme */
     opacity: 0;
   }
 }
 
 @keyframes smokeMorph {
   0% {
-    transform: scaleX(1) scaleY(1);
+    transform: scaleX(1) scaleY(1) rotate(0deg);
   }
-  25% {
-    transform: scaleX(1.03) scaleY(0.97);
+  33% {
+    transform: scaleX(1.05) scaleY(0.95) rotate(0.5deg);
   }
-  50% {
-    transform: scaleX(0.97) scaleY(1.03);
-  }
-  75% {
-    transform: scaleX(1.02) scaleY(0.98);
+  66% {
+    transform: scaleX(0.95) scaleY(1.05) rotate(-0.5deg);
   }
   100% {
-    transform: scaleX(1) scaleY(1);
+    transform: scaleX(1) scaleY(1) rotate(0deg);
   }
 }
 
 @keyframes backgroundMove {
   0% {
-    background-position: center bottom;
+    background-position: center 100%;
+  }
+  25% {
+    background-position: 15% 85%;
   }
   50% {
-    background-position: 10% 90%;
+    background-position: center 70%;
+  }
+  75% {
+    background-position: 85% 85%;
   }
   100% {
-    background-position: center bottom;
+    background-position: center 100%;
   }
 }
 
 @keyframes fadeIn {
   to {
-    opacity: 0.8;
+    opacity: 0.9; /* Höhere Opazität für bessere Sichtbarkeit */
   }
+}
+
+/* ZWEITE RAUCHSCHICHT FÜR MEHR TIEFE AUF GROSSEN BILDSCHIRMEN */
+.smoke::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("images/background.png") center / cover no-repeat;
+  opacity: 0.3;
+  filter: blur(15px) brightness(1.2);
+  animation: 
+    smokeRise 25s linear infinite reverse,
+    smokeMorph 15s ease-in-out infinite alternate,
+    backgroundMove 50s linear infinite;
+  z-index: -1;
 }
 
 .smoke::after {
@@ -105,13 +128,20 @@ body {
   position: absolute;
   inset: 0;
   background: url("images/background.png") center / cover no-repeat;
-  opacity: 0.5;
-  filter: blur(25px);
-  animation: smokeRise 30s linear infinite reverse,
-             smokeMorph 10s ease-in-out infinite alternate,
-             backgroundMove 50s linear infinite reverse;
+  opacity: 0.4;
+  filter: blur(30px) brightness(1.1);
+  animation: 
+    smokeRise 30s linear infinite,
+    smokeMorph 20s ease-in-out infinite alternate reverse,
+    backgroundMove 60s linear infinite reverse;
+  z-index: -2;
 }
 
+/* HOVER-EFFEKT FÜR INTERAKTIVITÄT (OPTIONAL) */
+.smoke:hover {
+  filter: blur(10px) brightness(1.1);
+  animation-duration: 15s, 10s, 30s; /* Schnellere Animation beim Hover */
+}
 .container {
     max-width: 500px;
     margin: 0 auto;
@@ -996,7 +1026,7 @@ textarea:focus {
 
 @media (max-width: 480px) {
     .image-stack {
-        height: 250px; /* Weiter proportional verkleinert für sehr kleine Geräte */
+        height: 250px; /* Weiter proportional verkleinert für sehr kleine Geräte <button class="btn" id="restart-btn">Nochmal beginnen</button>*/
     }
     
     .scene-layout {
