@@ -1097,42 +1097,42 @@ textarea:focus {
 /* MOBILE VERSION - WICHTIG: KLEINER UND MEHR ABSTAND */
 @media (max-width: 768px) {
     .next-scene-btn {
-        right: -50px; /* MEHR ABSTAND zum Bild (negativer Wert = weiter weg) */
-        width: 45px; /* VIEL KLEINER auf Mobile */
-        height: 45px; /* VIEL KLEINER auf Mobile */
+        right: -80px; /* MEHR ABSTAND zum Bild (negativer Wert = weiter weg) */
+        width: 25px; /* VIEL KLEINER auf Mobile */
+        height: 25px; /* VIEL KLEINER auf Mobile */
     }
     
     .next-arrow {
-        width: 22px; /* VIEL KLEINER auf Mobile */
-        height: 22px; /* VIEL KLEINER auf Mobile */
+        width: 11px; /* VIEL KLEINER auf Mobile */
+        height: 11px; /* VIEL KLEINER auf Mobile */
     }
 }
 
 /* KLEINE MOBILE GERÄTE - NOCH KLEINER */
 @media (max-width: 480px) {
     .next-scene-btn {
-        right: -40px; /* NOCH MEHR ABSTAND auf sehr kleinen Bildschirmen */
-        width: 40px; /* NOCH KLEINER */
-        height: 40px; /* NOCH KLEINER */
+        right: -80px; /* MEHR ABSTAND zum Bild (negativer Wert = weiter weg) */
+        width: 25px; /* VIEL KLEINER auf Mobile */
+        height: 25px; /* VIEL KLEINER auf Mobile */
     }
     
     .next-arrow {
-        width: 20px; /* NOCH KLEINER */
-        height: 20px; /* NOCH KLEINER */
+        width: 11px; /* VIEL KLEINER auf Mobile */
+        height: 11px; /* VIEL KLEINER auf Mobile */
     }
 }
 
 /* SEHR KLEINE MOBILE GERÄTE */
 @media (max-width: 360px) {
     .next-scene-btn {
-        right: -35px; /* MAXIMALER ABSTAND */
-        width: 38px; /* MINIMALE GRÖSSE */
-        height: 38px; /* MINIMALE GRÖSSE */
+        right: -80px; /* MEHR ABSTAND zum Bild (negativer Wert = weiter weg) */
+        width: 25px; /* VIEL KLEINER auf Mobile */
+        height: 25px; /* VIEL KLEINER auf Mobile */
     }
     
     .next-arrow {
-        width: 18px; /* MINIMALE GRÖSSE */
-        height: 18px; /* MINIMALE GRÖSSE */
+        width: 11px; /* VIEL KLEINER auf Mobile */
+        height: 11px; /* VIEL KLEINER auf Mobile */
     }
 }
 
