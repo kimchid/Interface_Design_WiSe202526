@@ -1058,7 +1058,7 @@ textarea:focus {
 /* MOBILE VERSION - Tablet und Mobile */
 @media screen and (max-width: 1024px) {
     .next-scene-btn {
-        right: -85px !important; /* MEHR Abstand vom Bild auf Tablets */
+        right: -20px !important; /* MEHR Abstand vom Bild auf Tablets */
         width: 50px !important; /* Etwas kleiner */
         height: 50px !important;
     }
@@ -1072,7 +1072,7 @@ textarea:focus {
 /* MOBILE VERSION - Standard Mobile */
 @media screen and (max-width: 768px) {
     .next-scene-btn {
-        right: -80px !important; /* NOCH MEHR Abstand auf Mobile */
+        right: -20px !important; /* NOCH MEHR Abstand auf Mobile */
         width: 45px !important; /* KLEINER auf Mobile */
         height: 45px !important;
     }
@@ -1086,7 +1086,7 @@ textarea:focus {
 /* KLEINE MOBILE GERÄTE */
 @media screen and (max-width: 480px) {
     .next-scene-btn {
-        right: -120px !important; /* NOCH MEHR Abstand */
+        right: -20px !important; /* NOCH MEHR Abstand */
         width: 40px !important; /* NOCH KLEINER */
         height: 40px !important;
     }
@@ -1100,7 +1100,7 @@ textarea:focus {
 /* SEHR KLEINE MOBILE GERÄTE */
 @media screen and (max-width: 360px) {
     .next-scene-btn {
-        right: -140px !important; /* MAXIMALER Abstand */
+        right: -40px !important; /* MAXIMALER Abstand */
         width: 35px !important; /* MINIMALE Größe */
         height: 35px !important;
     }
