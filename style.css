@@ -1034,13 +1034,14 @@ textarea:focus {
     }
 }
 
+/* NEU: Next Scene Button - Pfeil im Kreis rechts mittig */
 .next-scene-btn {
-    position: absolute; /* Absolute Positionierung */
-    right: -70px; /* Position rechts neben dem Bild */
-    top: 50%; /* Vertikal zentriert mit dem Bild */
+    position: absolute;
+    right: -70px;
+    top: 50%;
     transform: translateY(-50%);
-    width: 60px; /* Größe für Desktop */
-    height: 60px; /* Größe für Desktop */
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background-color: #2b2b2c;
     border: none;
@@ -1052,15 +1053,6 @@ textarea:focus {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
     opacity: 0.9;
-}
-
-/* Scene Container für die absolute Positionierung */
-.scene-layout {
-    position: relative; /* Wichtig für absolute Positionierung des Buttons */
-    display: flex;
-    gap: 40px;
-    align-items: flex-start;
-    margin-top: 20px;
 }
 
 .next-scene-btn:hover {
@@ -1087,59 +1079,59 @@ textarea:focus {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Pfeil SVG - Desktop Größe */
+/* Pfeil SVG */
 .next-arrow {
-    width: 32px; /* Größe für Desktop */
-    height: 32px; /* Größe für Desktop */
+    width: 32px;
+    height: 32px;
     fill: white;
 }
 
-/* MOBILE VERSION - WICHTIG: KLEINER UND MEHR ABSTAND */
+/* MOBILE VERSION - Tablet und Mobile */
 @media (max-width: 768px) {
     .next-scene-btn {
-        right: -80px; /* MEHR ABSTAND zum Bild (negativer Wert = weiter weg) */
-        width: 25px; /* VIEL KLEINER auf Mobile */
-        height: 25px; /* VIEL KLEINER auf Mobile */
+        right: -90px; /* MEHR Abstand vom Bild */
+        width: 45px; /* KLEINER auf Mobile */
+        height: 45px; /* KLEINER auf Mobile */
     }
     
     .next-arrow {
-        width: 11px; /* VIEL KLEINER auf Mobile */
-        height: 11px; /* VIEL KLEINER auf Mobile */
+        width: 20px; /* KLEINER auf Mobile */
+        height: 20px; /* KLEINER auf Mobile */
     }
 }
 
-/* KLEINE MOBILE GERÄTE - NOCH KLEINER */
+/* KLEINE MOBILE GERÄTE */
 @media (max-width: 480px) {
     .next-scene-btn {
-        right: -80px; /* MEHR ABSTAND zum Bild (negativer Wert = weiter weg) */
-        width: 25px; /* VIEL KLEINER auf Mobile */
-        height: 25px; /* VIEL KLEINER auf Mobile */
+        right: -100px; /* NOCH MEHR Abstand */
+        width: 40px; /* NOCH KLEINER */
+        height: 40px; /* NOCH KLEINER */
     }
     
     .next-arrow {
-        width: 11px; /* VIEL KLEINER auf Mobile */
-        height: 11px; /* VIEL KLEINER auf Mobile */
+        width: 18px; /* NOCH KLEINER */
+        height: 18px; /* NOCH KLEINER */
     }
 }
 
 /* SEHR KLEINE MOBILE GERÄTE */
 @media (max-width: 360px) {
     .next-scene-btn {
-        right: -80px; /* MEHR ABSTAND zum Bild (negativer Wert = weiter weg) */
-        width: 25px; /* VIEL KLEINER auf Mobile */
-        height: 25px; /* VIEL KLEINER auf Mobile */
+        right: -110px; /* MAXIMALER Abstand */
+        width: 35px; /* MINIMALE Größe */
+        height: 35px; /* MINIMALE Größe */
     }
     
     .next-arrow {
-        width: 11px; /* VIEL KLEINER auf Mobile */
-        height: 11px; /* VIEL KLEINER auf Mobile */
+        width: 16px; /* MINIMALE Größe */
+        height: 16px; /* MINIMALE Größe */
     }
 }
 
 /* Tablet - zwischen Desktop und Mobile */
 @media (min-width: 769px) and (max-width: 1024px) {
     .next-scene-btn {
-        right: -65px;
+        right: -75px;
         width: 55px;
         height: 55px;
     }
@@ -1153,6 +1145,6 @@ textarea:focus {
 /* Anpassung für Querformat - bleibt seitlich mittig */
 @media (max-height: 500px) and (orientation: landscape) {
     .next-scene-btn {
-        right: -50px;
+        right: -60px;
     }
 }
