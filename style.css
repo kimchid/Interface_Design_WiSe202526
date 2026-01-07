@@ -1037,11 +1037,11 @@ textarea:focus {
 /* NEU: Next Scene Button - Pfeil im Kreis rechts mittig */
 .next-scene-btn {
     position: absolute;
-    right: -70px;
+    right: -70px; /* Standard-Abstand für Desktop */
     top: 50%;
     transform: translateY(-50%);
-    width: 60px;
-    height: 60px;
+    width: 60px; /* Standard-Größe für Desktop */
+    height: 60px; /* Standard-Größe für Desktop */
     border-radius: 50%;
     background-color: #2b2b2c;
     border: none;
@@ -1055,96 +1055,66 @@ textarea:focus {
     opacity: 0.9;
 }
 
-.next-scene-btn:hover {
-    background-color: #646d7a;
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-    opacity: 1;
-}
-
-.next-scene-btn:active {
-    transform: translateY(-50%) scale(0.95);
-}
-
-.next-scene-btn:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-    transform: translateY(-50%);
-    opacity: 0.5;
-}
-
-.next-scene-btn:disabled:hover {
-    background-color: #cccccc;
-    transform: translateY(-50%);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Pfeil SVG */
-.next-arrow {
-    width: 32px;
-    height: 32px;
-    fill: white;
-}
-
 /* MOBILE VERSION - Tablet und Mobile */
-@media (max-width: 768px) {
+@media screen and (max-width: 1024px) {
     .next-scene-btn {
-        right: -90px; /* MEHR Abstand vom Bild */
-        width: 45px; /* KLEINER auf Mobile */
-        height: 45px; /* KLEINER auf Mobile */
+        right: -85px !important; /* MEHR Abstand vom Bild auf Tablets */
+        width: 50px !important; /* Etwas kleiner */
+        height: 50px !important;
     }
     
     .next-arrow {
-        width: 20px; /* KLEINER auf Mobile */
-        height: 20px; /* KLEINER auf Mobile */
+        width: 24px !important;
+        height: 24px !important;
+    }
+}
+
+/* MOBILE VERSION - Standard Mobile */
+@media screen and (max-width: 768px) {
+    .next-scene-btn {
+        right: -80px !important; /* NOCH MEHR Abstand auf Mobile */
+        width: 45px !important; /* KLEINER auf Mobile */
+        height: 45px !important;
+    }
+    
+    .next-arrow {
+        width: 20px !important;
+        height: 20px !important;
     }
 }
 
 /* KLEINE MOBILE GERÄTE */
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
     .next-scene-btn {
-        right: -100px; /* NOCH MEHR Abstand */
-        width: 40px; /* NOCH KLEINER */
-        height: 40px; /* NOCH KLEINER */
+        right: -120px !important; /* NOCH MEHR Abstand */
+        width: 40px !important; /* NOCH KLEINER */
+        height: 40px !important;
     }
     
     .next-arrow {
-        width: 18px; /* NOCH KLEINER */
-        height: 18px; /* NOCH KLEINER */
+        width: 18px !important;
+        height: 18px !important;
     }
 }
 
 /* SEHR KLEINE MOBILE GERÄTE */
-@media (max-width: 360px) {
+@media screen and (max-width: 360px) {
     .next-scene-btn {
-        right: -110px; /* MAXIMALER Abstand */
-        width: 35px; /* MINIMALE Größe */
-        height: 35px; /* MINIMALE Größe */
+        right: -140px !important; /* MAXIMALER Abstand */
+        width: 35px !important; /* MINIMALE Größe */
+        height: 35px !important;
     }
     
     .next-arrow {
-        width: 16px; /* MINIMALE Größe */
-        height: 16px; /* MINIMALE Größe */
+        width: 16px !important;
+        height: 16px !important;
     }
 }
 
-/* Tablet - zwischen Desktop und Mobile */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .next-scene-btn {
-        right: -75px;
-        width: 55px;
-        height: 55px;
-    }
-    
-    .next-arrow {
-        width: 28px;
-        height: 28px;
-    }
-}
-
-/* Anpassung für Querformat - bleibt seitlich mittig */
-@media (max-height: 500px) and (orientation: landscape) {
-    .next-scene-btn {
-        right: -60px;
-    }
+/* Pfeil SVG - Standard Desktop */
+.next-arrow {
+    width: 32px;
+    height: 32px;
+    fill: white;
+    transition: all 0.3s ease;
 }
