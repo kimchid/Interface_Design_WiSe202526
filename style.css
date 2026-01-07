@@ -1036,11 +1036,11 @@ textarea:focus {
 
 .next-scene-btn {
     position: absolute; /* Absolute Positionierung */
-    right: -60px; /* Position rechts neben dem Bild - näher */
+    right: -70px; /* Position rechts neben dem Bild */
     top: 50%; /* Vertikal zentriert mit dem Bild */
     transform: translateY(-50%);
-    width: 50px; /* KLEINER: von 60px auf 50px */
-    height: 50px; /* KLEINER: von 60px auf 50px */
+    width: 60px; /* Größe für Desktop */
+    height: 60px; /* Größe für Desktop */
     border-radius: 50%;
     background-color: #2b2b2c;
     border: none;
@@ -1087,71 +1087,72 @@ textarea:focus {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Pfeil SVG - AUCH KLEINER */
+/* Pfeil SVG - Desktop Größe */
 .next-arrow {
-    width: 24px; /* KLEINER: von 32px auf 24px */
-    height: 24px; /* KLEINER: von 32px auf 24px */
+    width: 32px; /* Größe für Desktop */
+    height: 32px; /* Größe für Desktop */
     fill: white;
 }
 
-/* Responsive Design - NUR Position anpassen */
-@media (max-width: 1024px) {
-    .next-scene-btn {
-        right: -50px; /* Weniger Abstand auf Tablet */
-    }
-}
-
-@media (max-width: 900px) {
-    .next-scene-btn {
-        right: -45px;
-    }
-}
-
-/* Mobile - bleibt seitlich mittig */
+/* MOBILE VERSION - WICHTIG: KLEINER UND MEHR ABSTAND */
 @media (max-width: 768px) {
     .next-scene-btn {
-        right: -40px; /* Weniger Abstand auf mobilen Geräten */
-        width: 45px; /* Noch etwas kleiner auf Mobile */
-        height: 45px; /* Noch etwas kleiner auf Mobile */
+        right: -50px; /* MEHR ABSTAND zum Bild (negativer Wert = weiter weg) */
+        width: 45px; /* VIEL KLEINER auf Mobile */
+        height: 45px; /* VIEL KLEINER auf Mobile */
     }
     
     .next-arrow {
-        width: 22px; /* Noch etwas kleiner auf Mobile */
-        height: 22px; /* Noch etwas kleiner auf Mobile */
+        width: 22px; /* VIEL KLEINER auf Mobile */
+        height: 22px; /* VIEL KLEINER auf Mobile */
     }
 }
 
+/* KLEINE MOBILE GERÄTE - NOCH KLEINER */
 @media (max-width: 480px) {
     .next-scene-btn {
-        right: -35px;
-        width: 40px; /* Sehr klein auf sehr kleinen Bildschirmen */
-        height: 40px; /* Sehr klein auf sehr kleinen Bildschirmen */
+        right: -40px; /* NOCH MEHR ABSTAND auf sehr kleinen Bildschirmen */
+        width: 40px; /* NOCH KLEINER */
+        height: 40px; /* NOCH KLEINER */
     }
     
     .next-arrow {
-        width: 20px; /* Sehr klein auf sehr kleinen Bildschirmen */
-        height: 20px; /* Sehr klein auf sehr kleinen Bildschirmen */
+        width: 20px; /* NOCH KLEINER */
+        height: 20px; /* NOCH KLEINER */
     }
 }
 
-/* Bei sehr kleinen Bildschirmen */
+/* SEHR KLEINE MOBILE GERÄTE */
 @media (max-width: 360px) {
     .next-scene-btn {
-        right: -30px;
-        width: 38px;
-        height: 38px;
-        opacity: 0.8;
+        right: -35px; /* MAXIMALER ABSTAND */
+        width: 38px; /* MINIMALE GRÖSSE */
+        height: 38px; /* MINIMALE GRÖSSE */
     }
     
     .next-arrow {
-        width: 18px;
-        height: 18px;
+        width: 18px; /* MINIMALE GRÖSSE */
+        height: 18px; /* MINIMALE GRÖSSE */
+    }
+}
+
+/* Tablet - zwischen Desktop und Mobile */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .next-scene-btn {
+        right: -65px;
+        width: 55px;
+        height: 55px;
+    }
+    
+    .next-arrow {
+        width: 28px;
+        height: 28px;
     }
 }
 
 /* Anpassung für Querformat - bleibt seitlich mittig */
 @media (max-height: 500px) and (orientation: landscape) {
     .next-scene-btn {
-        right: -35px;
+        right: -50px;
     }
 }
