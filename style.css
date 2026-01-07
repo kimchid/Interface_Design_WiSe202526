@@ -1033,3 +1033,180 @@ textarea:focus {
         gap: 10px;
     }
 }
+
+.next-scene-btn {
+    position: absolute; /* Absolute Positionierung */
+    right: -80px; /* Position rechts neben dem Bild */
+    top: 50%; /* Vertikal zentriert mit dem Bild */
+    transform: translateY(-50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #2b2b2c;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    opacity: 0.9;
+}
+
+/* Scene Container für die absolute Positionierung */
+.scene-layout {
+    position: relative; /* Wichtig für absolute Positionierung des Buttons */
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-top: 20px;
+    min-height: 400px; /* Mindesthöhe für vertikale Zentrierung */
+}
+
+.next-scene-btn:hover {
+    background-color: #646d7a;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    opacity: 1;
+}
+
+.next-scene-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.next-scene-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: translateY(-50%);
+    opacity: 0.5;
+}
+
+.next-scene-btn:disabled:hover {
+    background-color: #cccccc;
+    transform: translateY(-50%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Pfeil SVG */
+.next-arrow {
+    width: 32px;
+    height: 32px;
+    fill: white;
+}
+
+/* Responsive Design - NUR für den Next Button */
+@media (max-width: 1200px) {
+    .next-scene-btn {
+        right: -70px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .next-scene-btn {
+        right: -60px;
+        width: 55px;
+        height: 55px;
+    }
+    
+    .next-arrow {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+@media (max-width: 900px) {
+    .next-scene-btn {
+        right: -50px;
+    }
+}
+
+/* Auf Tablet/Mobile wechseln wir zur fixed Positionierung */
+@media (max-width: 768px) {
+    .next-scene-btn {
+        position: fixed; /* Auf mobilen Geräten fixed für bessere Erreichbarkeit */
+        right: 15px;
+        bottom: 100px;
+        top: auto;
+        transform: none;
+        width: 50px;
+        height: 50px;
+    }
+    
+    .scene-layout {
+        position: static; /* Auf mobilen Geräten nicht relative */
+        min-height: auto;
+    }
+    
+    .next-scene-btn:hover {
+        transform: scale(1.1);
+    }
+    
+    .next-scene-btn:active {
+        transform: scale(0.95);
+    }
+    
+    .next-scene-btn:disabled {
+        transform: none;
+    }
+    
+    .next-scene-btn:disabled:hover {
+        transform: none;
+    }
+    
+    .next-arrow {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .next-scene-btn {
+        right: 10px;
+        bottom: 90px;
+        width: 45px;
+        height: 45px;
+    }
+    
+    .next-arrow {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Anpassung für Querformat */
+@media (max-height: 500px) and (orientation: landscape) {
+    .next-scene-btn {
+        position: fixed;
+        right: 15px;
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%);
+    }
+    
+    .next-scene-btn:hover {
+        transform: translateY(-50%) scale(1.1);
+    }
+    
+    .next-scene-btn:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+    
+    .next-scene-btn:disabled {
+        transform: translateY(-50%);
+    }
+}
+
+/* Für sehr große Bildschirme */
+@media (min-width: 1600px) {
+    .next-scene-btn {
+        right: -100px;
+        width: 70px;
+        height: 70px;
+    }
+    
+    .next-arrow {
+        width: 36px;
+        height: 36px;
+    }
+}
