@@ -235,6 +235,38 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(`Szene ${sceneNumber} zurückgesetzt`);
     }
 
+    // Funktion für das Blinken/Aufleuchten des Bildes
+function flashImage(sceneNumber) {
+    const solutionImage = document.querySelector(`#scene-${sceneNumber} .solution-image`);
+    const imageStack = document.querySelector(`#scene-${sceneNumber} .image-stack`);
+    
+    if (!solutionImage || !imageStack) return;
+    
+    console.log(`Bild für Szene ${sceneNumber} blinkt grün auf`);
+    
+    // Lösche vorherige Animationen
+    solutionImage.style.animation = 'none';
+    imageStack.classList.remove('flashing');
+    
+    // Trigger reflow
+    void solutionImage.offsetHeight;
+    void imageStack.offsetHeight;
+    
+    // Füge grüne Blitz-Klassen hinzu
+    solutionImage.classList.add('green-flash');
+    imageStack.classList.add('flashing');
+    
+    // Entferne Klassen nach Animation
+    setTimeout(() => {
+        solutionImage.classList.remove('green-flash');
+        imageStack.classList.remove('flashing');
+        solutionImage.style.animation = '';
+    }, 800);
+    
+    // Sound für das Aufblinken
+    playSound('pulse-sound', 0.3);
+}
+
     // Start button
     const startBtn = document.getElementById('start-btn');
     if (startBtn) {
@@ -424,13 +456,31 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Funktion zum Aktualisieren des Rubbel-Status
         function updateScratchStatus() {
+            const container = canvas.closest('.scratch-container');
+            
             if (scratchingEnabled) {
                 canvas.style.cursor = "grab";
                 canvas.style.opacity = "1";
+                canvas.classList.add('enabled');
+                canvas.classList.remove('disabled');
+                
+                // Grüne Umrandung hinzufügen
+                if (container) {
+                    container.classList.add('active');
+                }
+                
                 console.log(`Rubbeln AKTIVIERT für Szene ${sceneNumber}`);
             } else {
                 canvas.style.cursor = "not-allowed";
                 canvas.style.opacity = "0.7";
+                canvas.classList.add('disabled');
+                canvas.classList.remove('enabled');
+                
+                // Grüne Umrandung entfernen
+                if (container) {
+                    container.classList.remove('active');
+                }
+                
                 console.log(`Rubbeln DEAKTIVIERT für Szene ${sceneNumber}`);
             }
         }
@@ -813,14 +863,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 typingTimer = setTimeout(() => {
                     // Reset typing timer
                 }, typeDelay * 2);
-                
-                if (hasText && !scratchingEnabled) {
-                    scratchingEnabled = true;
-                    updateScratchStatus();
-                } else if (!hasText && scratchingEnabled) {
-                    scratchingEnabled = false;
-                    updateScratchStatus();
-                }
             });
             
             submitBtn.addEventListener('click', function() {
@@ -837,6 +879,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.disabled = true;
                 this.textContent = 'Interpretation gespeichert';
                 textarea.disabled = true;
+                
+                // Rubbeln aktivieren
+                scratchingEnabled = true;
+                updateScratchStatus();
+                
+                // Bild kurz aufblinken lassen
+                flashImage(sceneNumber);
+                
+                // Sound für die Aktivierung
+                playSound('pulse-sound', 0.2);
             });
         }
         
@@ -883,32 +935,6 @@ document.addEventListener('DOMContentLoaded', function() {
         viewAnswersAgainBtn.addEventListener('click', function() {
             playSound('click-sound', 0.3);
             showScreen('answers-screen');
-        });
-    }
-
-    // Restart button - EINFACHE UND FUNKTIONIERENDE VERSION
-    const restartBtn = document.getElementById('restart-btn');
-    if (restartBtn) {
-        restartBtn.addEventListener('click', function() {
-            playSound('click-sound', 0.3);
-            console.log('=== RESTART BUTTON GEKLICKT ===');
-            
-            // 1. Alle Antworten aus localStorage löschen
-            userAnswers = {};
-            localStorage.removeItem('zwischenDenZeilenAnswers');
-            console.log('✓ Alle Antworten gelöscht');
-            
-            // 2. Alle Szenen zurücksetzen
-            for (let i = 1; i <= 5; i++) {
-                resetScene(i);
-            }
-            console.log('✓ Alle 5 Szenen zurückgesetzt');
-            
-            // 3. Zurück zum Startbildschirm
-            console.log('✓ Wechsle zum Startbildschirm');
-            showScreen('start-screen');
-            
-            console.log('=== RESTART ABGESCHLOSSEN ===');
         });
     }
 
