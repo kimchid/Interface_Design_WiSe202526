@@ -1036,7 +1036,7 @@ textarea:focus {
 
 .next-scene-btn {
     position: absolute; /* Absolute Positionierung */
-    right: -80px; /* Position rechts neben dem Bild */
+    right: -70px; /* Position rechts neben dem Bild */
     top: 50%; /* Vertikal zentriert mit dem Bild */
     transform: translateY(-50%);
     width: 60px;
@@ -1061,7 +1061,6 @@ textarea:focus {
     gap: 40px;
     align-items: flex-start;
     margin-top: 20px;
-    min-height: 400px; /* Mindesthöhe für vertikale Zentrierung */
 }
 
 .next-scene-btn:hover {
@@ -1095,23 +1094,10 @@ textarea:focus {
     fill: white;
 }
 
-/* Responsive Design - NUR für den Next Button */
-@media (max-width: 1200px) {
-    .next-scene-btn {
-        right: -70px;
-    }
-}
-
+/* Responsive Design - NUR Position anpassen, Größe bleibt */
 @media (max-width: 1024px) {
     .next-scene-btn {
         right: -60px;
-        width: 55px;
-        height: 55px;
-    }
-    
-    .next-arrow {
-        width: 28px;
-        height: 28px;
     }
 }
 
@@ -1121,67 +1107,10 @@ textarea:focus {
     }
 }
 
-/* Auf Tablet/Mobile wechseln wir zur fixed Positionierung */
+/* Auf Mobile - ABER IMMER NOCH SEITLICH MITTIG */
 @media (max-width: 768px) {
     .next-scene-btn {
-        position: fixed; /* Auf mobilen Geräten fixed für bessere Erreichbarkeit */
-        right: 15px;
-        bottom: 100px;
-        top: auto;
-        transform: none;
-        width: 50px;
-        height: 50px;
-    }
-    
-    .scene-layout {
-        position: static; /* Auf mobilen Geräten nicht relative */
-        min-height: auto;
-    }
-    
-    .next-scene-btn:hover {
-        transform: scale(1.1);
-    }
-    
-    .next-scene-btn:active {
-        transform: scale(0.95);
-    }
-    
-    .next-scene-btn:disabled {
-        transform: none;
-    }
-    
-    .next-scene-btn:disabled:hover {
-        transform: none;
-    }
-    
-    .next-arrow {
-        width: 24px;
-        height: 24px;
-    }
-}
-
-@media (max-width: 480px) {
-    .next-scene-btn {
-        right: 10px;
-        bottom: 90px;
-        width: 45px;
-        height: 45px;
-    }
-    
-    .next-arrow {
-        width: 20px;
-        height: 20px;
-    }
-}
-
-/* Anpassung für Querformat */
-@media (max-height: 500px) and (orientation: landscape) {
-    .next-scene-btn {
-        position: fixed;
-        right: 15px;
-        top: 50%;
-        bottom: auto;
-        transform: translateY(-50%);
+        right: -40px; /* Weniger Abstand auf mobilen Geräten */
     }
     
     .next-scene-btn:hover {
@@ -1195,18 +1124,29 @@ textarea:focus {
     .next-scene-btn:disabled {
         transform: translateY(-50%);
     }
+    
+    .next-scene-btn:disabled:hover {
+        transform: translateY(-50%);
+    }
 }
 
-/* Für sehr große Bildschirme */
-@media (min-width: 1600px) {
+@media (max-width: 480px) {
     .next-scene-btn {
-        right: -100px;
-        width: 70px;
-        height: 70px;
+        right: -30px; /* Noch weniger Abstand auf sehr kleinen Bildschirmen */
     }
-    
-    .next-arrow {
-        width: 36px;
-        height: 36px;
+}
+
+/* Bei sehr kleinen Bildschirmen kann der Button überlagern */
+@media (max-width: 360px) {
+    .next-scene-btn {
+        right: -25px;
+        opacity: 0.8;
+    }
+}
+
+/* Anpassung für Querformat - bleibt seitlich mittig */
+@media (max-height: 500px) and (orientation: landscape) {
+    .next-scene-btn {
+        right: -50px;
     }
 }
