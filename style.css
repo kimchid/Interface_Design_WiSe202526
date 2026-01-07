@@ -1107,26 +1107,11 @@ textarea:focus {
     }
 }
 
-/* Auf Mobile - ABER IMMER NOCH SEITLICH MITTIG */
+/* Auf Mobile - WICHTIG: KEIN WECHSEL ZU BOTTOM, bleibt seitlich mittig */
 @media (max-width: 768px) {
     .next-scene-btn {
         right: -40px; /* Weniger Abstand auf mobilen Geräten */
-    }
-    
-    .next-scene-btn:hover {
-        transform: translateY(-50%) scale(1.1);
-    }
-    
-    .next-scene-btn:active {
-        transform: translateY(-50%) scale(0.95);
-    }
-    
-    .next-scene-btn:disabled {
-        transform: translateY(-50%);
-    }
-    
-    .next-scene-btn:disabled:hover {
-        transform: translateY(-50%);
+        /* KEIN bottom, KEIN position: fixed - bleibt seitlich mittig */
     }
 }
 
@@ -1139,7 +1124,7 @@ textarea:focus {
 /* Bei sehr kleinen Bildschirmen kann der Button überlagern */
 @media (max-width: 360px) {
     .next-scene-btn {
-        right: -25px;
+        right: -20px;
         opacity: 0.8;
     }
 }
@@ -1147,6 +1132,6 @@ textarea:focus {
 /* Anpassung für Querformat - bleibt seitlich mittig */
 @media (max-height: 500px) and (orientation: landscape) {
     .next-scene-btn {
-        right: -50px;
+        right: -40px;
     }
 }
