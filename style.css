@@ -1034,14 +1034,14 @@ textarea:focus {
     }
 }
 
-/* NEU: Next Scene Button - Pfeil im Kreis rechts mittig */
+/* NEU: Next Scene Button - Pfeil im Kreis rechts */
 .next-scene-btn {
     position: absolute;
-    right: -70px; /* Standard-Abstand für Desktop */
+    right: 15px; /* 15px Abstand vom rechten Rand */
     top: 50%;
     transform: translateY(-50%);
-    width: 60px; /* Standard-Größe für Desktop */
-    height: 60px; /* Standard-Größe für Desktop */
+    width: 50px; /* Kleiner als vorher (war 60px) */
+    height: 50px; /* Kleiner als vorher (war 60px) */
     border-radius: 50%;
     background-color: #2b2b2c;
     border: none;
@@ -1055,66 +1055,70 @@ textarea:focus {
     opacity: 0.9;
 }
 
-/* MOBILE VERSION - Tablet und Mobile */
+/* Pfeil SVG - auch kleiner */
+.next-arrow {
+    width: 24px; /* Kleiner (war 32px) */
+    height: 24px; /* Kleiner (war 32px) */
+    fill: white;
+}
+
+/* Hover-Effekt beibehalten */
+.next-scene-btn:hover {
+    background-color: #646d7a;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    opacity: 1;
+}
+
+/* Mobile Versionen - noch kleiner */
 @media screen and (max-width: 1024px) {
     .next-scene-btn {
-        right: -20px !important; /* MEHR Abstand vom Bild auf Tablets */
-        width: 50px !important; /* Etwas kleiner */
-        height: 50px !important;
+        right: -15px;
+        width: 45px;
+        height: 45px;
     }
     
     .next-arrow {
-        width: 24px !important;
-        height: 24px !important;
+        width: 22px;
+        height: 22px;
     }
 }
 
-/* MOBILE VERSION - Standard Mobile */
 @media screen and (max-width: 768px) {
     .next-scene-btn {
-        right: -20px !important; /* NOCH MEHR Abstand auf Mobile */
-        width: 45px !important; /* KLEINER auf Mobile */
-        height: 45px !important;
+        right: -15px;
+        width: 35px;
+        height: 35px;
     }
     
     .next-arrow {
-        width: 20px !important;
-        height: 20px !important;
+        width: 20px;
+        height: 20px;
     }
 }
 
-/* KLEINE MOBILE GERÄTE */
 @media screen and (max-width: 480px) {
     .next-scene-btn {
-        right: -20px !important; /* NOCH MEHR Abstand */
-        width: 40px !important; /* NOCH KLEINER */
-        height: 40px !important;
+        right: -9px;
+        width: 35px;
+        height: 35px;
     }
     
     .next-arrow {
-        width: 18px !important;
-        height: 18px !important;
+        width: 18px;
+        height: 18px;
     }
 }
 
-/* SEHR KLEINE MOBILE GERÄTE */
 @media screen and (max-width: 360px) {
     .next-scene-btn {
-        right: -40px !important; /* MAXIMALER Abstand */
-        width: 35px !important; /* MINIMALE Größe */
-        height: 35px !important;
+        right: -5px;
+        width: 30px;
+        height: 30px;
     }
     
     .next-arrow {
-        width: 16px !important;
-        height: 16px !important;
+        width: 16px;
+        height: 16px;
     }
-}
-
-/* Pfeil SVG - Standard Desktop */
-.next-arrow {
-    width: 32px;
-    height: 32px;
-    fill: white;
-    transition: all 0.3s ease;
 }
